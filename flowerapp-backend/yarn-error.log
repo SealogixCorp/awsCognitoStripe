@@ -1,0 +1,42 @@
+Arguments: 
+  /usr/local/Cellar/node@10/10.18.1/bin/node /Users/ahmad/.yarn/bin/yarn.js add cors express nodemon uuid stripe dotennv
+
+PATH: 
+  /Users/ahmad/.rvm/gems/ruby-2.7.0/bin:/Users/ahmad/.rvm/gems/ruby-2.7.0@global/bin:/Users/ahmad/.rvm/rubies/ruby-2.7.0/bin:/usr/local/opt/node@10/bin:/usr/local/opt/node@10/bin:/usr/local/opt/node@10/bin:/usr/local/opt/node@10/bin:/Users/ahmad/.yarn/bin:/Users/ahmad/.config/yarn/global/node_modules/.bin:/Users/ahmad/.nvm/versions/node/v10.16.0/bin:/usr/local/opt/node@8/bin:/usr/local/opt/node@8/bin:/Users/ahmad/.fastlane/bin/fastlane_lib:/Users/ahmad/.fastlane/bin:/Library/Frameworks/Python.framework/Versions/3.6/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Xamarin Workbooks.app/Contents/SharedSupport/path-bin:/Users/ahmad/Library/Android/sdk/platform-tools:/Users/ahmad/Library/Android/sdk/tools:/Users/ahmad/Library/Android/sdk/platform-tools:/Users/ahmad/codebase/flutter/bin:/Users/ahmad/.rvm/bin
+
+Yarn version: 
+  1.21.1
+
+Node version: 
+  10.18.1
+
+Platform: 
+  darwin x64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/dotennv: Not found
+      at Request.params.callback [as _callback] (/Users/ahmad/.yarn/lib/cli.js:66947:18)
+      at Request.self.callback (/Users/ahmad/.yarn/lib/cli.js:140665:22)
+      at Request.emit (events.js:198:13)
+      at Request.<anonymous> (/Users/ahmad/.yarn/lib/cli.js:141637:10)
+      at Request.emit (events.js:198:13)
+      at IncomingMessage.<anonymous> (/Users/ahmad/.yarn/lib/cli.js:141559:12)
+      at Object.onceWrapper (events.js:286:20)
+      at IncomingMessage.emit (events.js:203:15)
+      at endReadableNT (_stream_readable.js:1145:12)
+      at process._tickCallback (internal/process/next_tick.js:63:19)
+
+npm manifest: 
+  {
+    "name": "flowerapp-backend",
+    "version": "1.0.0",
+    "main": "index.js",
+    "author": "Rashid Ahmad",
+    "license": "MIT"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
