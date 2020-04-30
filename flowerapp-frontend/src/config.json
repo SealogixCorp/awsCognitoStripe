@@ -1,7 +1,7 @@
 {
 "cognito":{
-  "REGION":"us-east-2",
-  "USER_POOL_ID": "us-east-2_JJ70xw1uR",
-  "APP_CLIENT_ID": "5nn7ur2nbjqte1d0dcrs1l2e11"
+  "REGION":"us-west-2",
+  "USER_POOL_ID": "us-west-2_KDvZW2ti4",
+  "APP_CLIENT_ID": "33dgicaad2jr9pvkfjreuerrff"
 }
 }
