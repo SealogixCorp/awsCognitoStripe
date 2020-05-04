@@ -177,7 +177,8 @@ export default () => {
    //   })
    //   .catch(error => console.log(error));
    const response = await axios.post(
-     "http://localhost:8080/checkout",
+    //  "http://localhost:8080/checkout",
+    "https://myflowerarchitect.com/account/checkout",
      { token, product }
    );
    const { status } = response.data;
