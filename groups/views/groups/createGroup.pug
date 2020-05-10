@@ -1,0 +1,31 @@
+extends ../layout
+
+block content
+  br
+  .pb-2.mt-2.mb-4.border-bottom
+    h3 #{CREATE_GROUP}
+
+  form(action='/group/create', method='POST')
+    input(type='hidden', name='_csrf', value=_csrf)
+    .form-group.row
+      label.col-md-3.col-form-label.font-weight-bold.text-right(for='name') #{NAME}
+      .col-md-7
+        input.form-control(type='text', name='tit', id='tit', placeholder=GROUP_NAME)
+    .form-group.row
+      label.col-md-3.col-form-label.font-weight-bold.text-right(for='name') #{CATEGORY}
+      .col-md-7
+        input.form-control(type='text', name='cat', id='cat', placeholder=CATEGORY)
+    .form-group.row
+      label.col-md-3.col-form-label.font-weight-bold.text-right(for='location') #{DESCRIPTION}
+      .col-md-7
+        input.form-control(type='text', name='des', id='des', placeholder=DESCRIPTION)
+    .form-group.row
+      label.col-md-3.col-form-label.font-weight-bold.text-right(for='website') #{WEBSITE}
+      .col-md-7
+        input.form-control(type='text', name='web', id='web', placeholder=WEBSITE_URL, autocomplete='url')
+    .form-group
+      .offset-sm-3.col-md-7.pl-2
+        button.btn.btn.btn-primary(type='submit')
+          i.fas.fa-pencil-alt.fa-sm
+          | #{SUBMIT}
+

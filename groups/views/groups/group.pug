@@ -1,0 +1,86 @@
+extends ../layout
+
+block content
+  br
+  .pb-2.mt-2.mb-4.border-bottom
+    h3 #{GROUP_DATA}
+    hr
+    .row
+      .col-md-4
+        h1 #{groupData.tit}
+        p
+        .col-md-7
+
+        p #{groupData.des}
+        p
+        .form-group.row
+          label.col-md-3.col-form-label.font-weight-bold.text-right(for='category') #{CATEGORY}
+          .col-md-7
+            input.form-control(name='category', id='category', value=groupData.cat, selectable=false)
+        .form-group.row
+          label.col-md-3.col-form-label.font-weight-bold.text-right(for='category') #{OWNER}
+          .col-md-7
+            input.form-control(name='owner', id='owner', value=groupData.oNa)
+
+  .pb-2.mt-2.mb-4.border-bottom
+   h3 #{GROUP_MEMBERS}
+    div(class="my-groups")
+      div(class="mygroups-links")
+        a(onClick="deleteMember()")
+           button(type="button") #{DELETE_MEMBER}
+
+        #table-wrapper-scroll
+            table#table(class="table  my-groups table-hover table-condensed")
+                tbody
+                  tr
+                      th #{NAME}
+                      th #{EMAIL}
+                      th #{LAST_ACTIVE}
+                each user in groupData.mem
+                  tr(id = user.mId)
+                    td #{user.mNa}
+                    td #{user.eml}
+                    td #{user.lasActive}
+    br
+    .pb-2.mt-2.mb-4.border-bottom
+      h3 #{INVITATIONS}
+        if groupOwner == true
+         div(class="mygroups-links")
+            a(href="../groupInvite/" + groupData.gid)
+               button(type="button") #{INVITE_NEW_MEMBER}
+
+         table#table(class="table  my-groups table-hover table-condensed")
+             tbody
+               tr
+                   th #{NAME}
+                   th #{EMAIL}
+                   th #{TIMES_INVITED}
+                   th #{LAST_INVITED}
+             each user in groupData.inv
+               tr(id = user.mId)
+                 td #{user.mNa}
+                 td #{user.eml}
+                 td #{user.nIv}
+                 td #{user.lasActive}
+    script.
+        function highlight(e) {
+            if (selected[0]) selected[0].className = '';
+            e.target.parentNode.className = 'selected';
+        }
+        function deleteMember()
+        {
+            if (selected[0]) {
+                var selectedId  = selected[0].id;
+                $.post("./group/deleteUser/" + selectedId + "/" = groupData._id", function(result){
+                    var res = JSON.parse(result);
+                    if(res.success) {
+                        location.reload();
+                    }
+                });
+            } else {
+                alert(#{PLEASE_SELECT_MEMBER_TO_DELETE});
+            }
+        }
+      var table = document.getElementById('table');
+      selected = table.getElementsByClassName('selected');
+      table.onclick = highlight;

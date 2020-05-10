@@ -1,0 +1,27 @@
+extends ../layout
+
+block content
+  br
+
+  .pb-2.mt-2.mb-4.border-bottom
+    h3 #{INVITE_NEW_MEMBER_TO_GROUP}
+    hr
+    .row
+      .col-md-4
+        h1 #{groupData.tit}
+        p
+        .col-md-7
+        p #{groupData.des}
+        p
+  form(action='../group/invite/' + groupData.gid, method='POST')
+    input(type='hidden', name='_csrf', value=_csrf)
+    .form-group.row
+      label.col-md-3.col-form-label.font-weight-bold.text-right(for='name') #{ENTER_EMAIL_ADDRESS}
+      .col-md-7
+        input.form-control(type='email', name='email', id='email', placeholder=EMAIL_SAMPLE)
+    .form-group
+      .offset-sm-3.col-md-7.pl-2
+        button.btn.btn.btn-primary(type='submit')
+          i.fas.fa-pencil-alt.fa-sm
+          | #{SEND_EMAIL_INVITATION}
+

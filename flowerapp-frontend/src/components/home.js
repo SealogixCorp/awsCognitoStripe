@@ -161,12 +161,7 @@ export default () => {
 
    console.log(token, product);
    const response = await axios.post(
-<<<<<<< HEAD
-    //  "http://localhost:8080/checkout",
     "https://myflowerarchitect.com/account/checkout",
-=======
-     "https://myflowerarchitect.com/account/checkout",
->>>>>>> cf4c8100cf1011e778429ae8c5104893d97abceb
      { token, product }
    );
    console.log(response);

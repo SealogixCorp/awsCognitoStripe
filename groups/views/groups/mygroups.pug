@@ -1,0 +1,96 @@
+extends ../layout
+
+block content
+  br
+  .pb-2.mt-2.mb-4.border-bottom
+    h3 #{MY_GROUPS}
+  .pb-2.mt-2.mb-4.border-bottom
+    div(class="my-groups")
+        if groupOwner == true
+          div(class="mygroups-links")
+            a(href="group/createGroup")
+               button(type="button") #{CREATE_GROUP}
+            |#{' '}
+            a(onClick="editGroup()")
+               button(type="button") #{EDIT_GROUP}
+            |#{' '}
+            a(onClick="deleteGroup()")
+               button(type="button") #{DELETE_GROUP}
+        #table-wrapper-scroll
+            table#table(class="table  my-groups table-hover table-condensed")
+                tbody
+                  tr
+                      th #{NAME}
+                      th #{CATEGORY}
+                      th #{OWNER}
+                      th #{MEMBERS}
+                      th #{LAST_ACTIVE}
+                each group in groups
+                  tr(id = group.id)
+                    td #{group.tit}
+                    td #{group.cat}
+                    td #{group.oNa}
+                    td #{group.number}
+                    td #{group.las}
+    script.
+        function highlight(e) {
+            if (selected[0])
+            {
+                selected[0].className = '';
+            }
+            e.target.parentNode.className = 'selected';
+            var selectedId  = selected[0].id;
+            window.location = './group/' + selectedId;
+        }
+        function deleteGroup()
+        {
+            if (selected[0]) {
+                var selectedId  = selected[0].id;
+                $.post("./group/delete/"+selectedId, function(result){
+                    var res = JSON.parse(result);
+                    if(res.success) {
+                        location.reload();
+                    } else {
+                        alert(res.msg);
+                    }
+                });
+            } else {
+                alert(PLEASE_SELECT_GROUP_TO_DELETE);
+            }
+        }
+        function editGroup()
+        {
+            if (selected[0]) {
+                var selectedId  = selected[0].id;
+                $.post("./editGroup/"+selectedId, function(result){
+                    var res = JSON.parse(result);
+                    if(res.success) {
+                        location.reload();
+                    } else {
+                        alert(res.msg);
+                    }
+                });
+            } else {
+                alert(PLEASE_SELECT_GROUP_TO_EDIT);
+            }
+        }
+        function selectGroup()
+                {
+                    if (selected[0]) {
+                        var selectedId  = selected[0].id;
+                        $.post("../group/" + selectedId, function(result){
+                            var res = JSON.parse(result);
+                            if(res.success) {
+
+                            } else {
+                                alert(res.msg);
+                                location.reload();
+                            }
+                        });
+                    } else {
+                        alert(PLEASE_SELECT_GROUP_TO_EDIT);
+                    }
+                }
+      var table = document.getElementById('table');
+      selected = table.getElementsByClassName('selected');
+      table.onclick = highlight;
