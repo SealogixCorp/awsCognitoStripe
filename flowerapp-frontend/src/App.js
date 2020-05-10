@@ -32,13 +32,6 @@ const signUpConfig = {
       type: 'password'
     },
     {
-      label: 'Birthday',
-      key: 'birthdate',
-      required: true,
-      displayOrder: 6,
-      type: 'date'
-    },
-    {
       label: 'Locale',
       key: 'locale',
       required: true,
