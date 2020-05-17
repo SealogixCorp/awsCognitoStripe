@@ -26,7 +26,7 @@ exports.getLogin = (req, res) => {
     layout: false,
     title: "Login",
     email: req.user.email,
-    recaptcha_form: nocaptcha,
+    // recaptcha_form: nocaptcha,
     PASSWORD: i18n.__("PASSWORD"),
     SIGN_IN: i18n.__("SIGN_IN"),
     ARE_YOU_A_HUMAN: i18n.__("ARE_YOU_A_HUMAN"),
@@ -99,8 +99,8 @@ exports.getSignup = (req, res) => {
   }
   var returnData = {
     title: "Create Account",
-    email: req.user.email,
-    recaptcha_form: nocaptcha,
+    // email: req.user.email,
+    // recaptcha_form: nocaptcha,
     SIGN_UP: i18n.__("SIGN_UP"),
     FIRSTNAME: i18n.__("FIRSTNAME"),
     LASTNAME: i18n.__("LASTNAME"),
@@ -340,7 +340,7 @@ exports.getReset = (req, res, next) => {
 
       var returnData = {
         title: "Password Reset",
-        recaptcha_form: nocaptcha,
+        // recaptcha_form: nocaptcha,
         RESET_PASSWORD: i18n.__("RESET_PASSWORD"),
         NEW_PASSWORD: i18n.__("NEW_PASSWORD"),
         CONFIRM_PASSWORD: i18n.__("CONFIRM_PASSWORD"),
@@ -573,7 +573,7 @@ exports.getForgot = (req, res) => {
 
   var returnData = {
     title: "Forgot Password",
-    recaptcha_form: nocaptcha,
+    // recaptcha_form: nocaptcha,
     FORGOT_PASSWORD: i18n.__("FORGOT_PASSWORD"),
     ENTER_YOUR_EMAIL_ADDRESS_BELOW_AND_WE_WILL_SEND_YOU_PASSWORD_RESET_INSTRUCTIONS: i18n.__(
       "ENTER_YOUR_EMAIL_ADDRESS_BELOW_AND_WE_WILL_SEND_YOU_PASSWORD_RESET_INSTRUCTIONS"

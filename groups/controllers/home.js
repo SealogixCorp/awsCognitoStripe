@@ -1,3 +1,5 @@
+const utils = require("../lib/utils");
+
 /**
  * GET /
  * Home page.
