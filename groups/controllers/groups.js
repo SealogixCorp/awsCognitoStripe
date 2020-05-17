@@ -84,6 +84,128 @@ exports.getGroups = function (req, res, next) {
 };
 
 /**
+ * Load Groups
+ */
+
+exports.getGroupsList = function(req, res, next) {
+  const userId = req.param("userId");
+  const groupId = req.param("groupId");
+  const groupTit = req.param("groupTit");
+  const groupOwner = req.param("groupOwner");
+  const groupLas = req.param("groupLas");
+  const start = parseInt(req.param("start"));
+  const page = parseInt(req.param("page"));
+  const limit = parseInt(req.param("limit"));
+
+  const obj = {};
+  if (userId) {
+    obj.mem = { $elemMatch: { mid: ObjectId(userId) } };
+  }
+  if (groupId) {
+    obj._id = ObjectId(groupId);
+  }
+  if (groupTit) {
+    obj.tit = groupTit;
+  }
+  if (groupOwner) {
+    obj.oNa = groupOwner;
+  }
+  if (groupLas) {
+    obj.las = groupLas;
+  }
+  // console.log(obj);
+  const fields = {
+    tit: 1,
+    oNa: 1,
+    des: 1,
+    cat: 1,
+    mem: 1,
+    las: 1,
+    cre: 1
+  };
+
+  // collection.find().skip(pageSize*(pageNum-1)).limit(pageSize);
+  Group.find(obj, fields, (err, groups) => {
+    if (err) {
+      utils.errLog(req, res, "administrators.getGroupsList.1", err, true);
+    }
+    res.send(groups);
+    // }).sort({'username': 1});
+  })
+    .sort({ cre: -1 })
+    .skip(limit * start)
+    .limit(limit);
+};
+
+/**
+ * Load detailed group data
+ */
+
+exports.getGroupData = function(req, res, next) {
+  // .todo decrypt data
+  const groupId = req.param("groupId");
+  const obj = { _id: groupId };
+
+  Group.findOne(obj, (err, group) => {
+    if (err) {
+      utils.errLog(req, res, "administrators.getGroupData.1", err, true);
+    }
+    if (group) {
+      if (req.user && groupData.mem.length) {
+        for (var i = 0; i < groupData.mem.length; i++) {
+          if (req.user._id.equals(groupData.mem[i].mid)) {
+            userFound = true;
+          }
+        }
+        if (userFound === true) {
+          if (req.user._id.equals(groupData.oid)) {
+            returnData.groupOwner = true;
+          }
+          returnData.groupData = {
+            gid: groupData._id,
+            cat: groupData.cat,
+            tit: groupData.tit,
+            des: groupData.des,
+            oNa: encryptor.decrypt(groupData.oNa),
+            mem: groupData.mem
+          };
+          if (returnData.groupOwner) {
+            returnData.groupData.inv = groupData.inv;
+          }
+
+          for (var i = 0; i < groupData.mem.length; i++) {
+            returnData.groupData.mem[i].mNa = encryptor.decrypt(
+              groupData.mem[i].mNa
+            );
+            returnData.groupData.mem[i].eml = encryptor.decrypt(
+              groupData.mem[i].encryptedEmail
+            );
+            delete returnData.groupData.mem[i].encryptedEmail;
+            returnData.groupData.mem[i].lasActive = moment(
+              groupData.mem[i].las
+            ).format("YYYY-MM-DD");
+          }
+          if (config.loginFrom === "mobile") {
+            res.send({ success: true, data: returnData, callViewURL: "group" });
+          } else {
+            res.render("groups/group", returnData);
+          }
+        } else {
+          res.send({
+            success: false,
+            error: "Current User not Member of Group"
+          });
+        }
+      }
+    } else {
+      res.send({ success: false, error: "GroupId not found" });
+    }
+
+    // }).sort({'username': 1});
+  });
+};
+
+/**
  * GET /getMygroups for user
  *
  */
@@ -307,6 +429,59 @@ exports.getMygroups = function (req, res, next) {
   });
   returnData.groups = groups;
   res.render('groups/mygroups', returnData);
+};
+
+/**
+ * Load group Invites
+ */
+
+exports.getGroupInvites = function(req, res, next) {
+  const groupId = req.param("groupId");
+  const obj = { _id: groupId };
+
+  Group.findOne(obj, { inv: 1 }, (err, group) => {
+    if (err) {
+      utils.errLog(req, res, "administrators.getGroupMembers.1", err, true);
+    }
+    if (group) {
+      var returnData = group.inv;
+      for (var i = 0; i < returnData.length; i++) {
+        returnData[i].eml = encryptor.decrypt(returnData[i].encryptedEmail);
+        delete returnData[i].encryptedEmail;
+      }
+      res.send(returnData);
+    } else {
+      res.send({ success: false, error: "Members not found" });
+    }
+    // }).sort({'username': 1});
+  });
+};
+
+/**
+ * Load group Members
+ */
+
+exports.getGroupMembers = function(req, res, next) {
+  const groupId = req.param("groupId");
+  const obj = { _id: groupId };
+
+  Group.findOne(obj, { mem: 1 }, (err, group) => {
+    if (err) {
+      utils.errLog(req, res, "administrators.getGroupMembers.1", err, true);
+    }
+    if (group.mem) {
+      var returnData = group.mem;
+      for (var i = 0; i < returnData.length; i++) {
+        returnData[i].mNa = encryptor.decrypt(returnData.mNa);
+        returnData[i].eml = encryptor.decrypt(returnData.encryptedEmail);
+        delete returnData[i].encryptedEmail;
+      }
+      res.send(returnData);
+    } else {
+      res.send({ success: false, error: "Members not found" });
+    }
+    // }).sort({'username': 1});
+  });
 };
 
 /**

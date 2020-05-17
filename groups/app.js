@@ -179,6 +179,33 @@ app.post(
 );
 app.post("/group/invite/:groupId", groupsController.postInviteUser);
 
+app.get(
+  "/administrator/groups/list",
+  passportConfig.isAuthenticated,
+  passportConfig.isAuthorized,
+  groupsController.getGroupsList
+);
+app.get(
+  "/administrator/group/data/:groupId",
+  passportConfig.isAuthenticated,
+  passportConfig.isAuthorized,
+  groupsController.getGroupData
+);
+app.get(
+  "/administrator/group/members/:groupId",
+  passportConfig.isAuthenticated,
+  passportConfig.isAuthorized,
+  groupsController.getGroupMembers
+);
+app.get(
+  "/administrator/group/invitation/:groupId",
+  passportConfig.isAuthenticated,
+  passportConfig.isAuthorized,
+  groupsController.getGroupInvites
+);
+
+
+
 /**
  * API examples routes.
  */
