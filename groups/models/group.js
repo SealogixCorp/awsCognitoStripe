@@ -50,8 +50,8 @@ var GroupSchema = new Schema({
   ldes: [
     {
       lan: { type: String, default: "", trim: true },
-      des: { type: String, default: "", trim: true }
-    }
+      tit: { type: String, default: "", trim: true },
+      des: { type: String, default: "", trim: true },    }
   ], // multi language description
   cat: { type: String, default: "", index: true, trim: true }, // categroy
   gtyp: { type: String, default: "", index: true, trim: true }, // normal or enterprisemembershipsLeft: {type: Number, default: 10}  // used for enterprise type group.
