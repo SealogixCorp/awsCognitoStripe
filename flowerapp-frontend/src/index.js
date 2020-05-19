@@ -5,7 +5,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import './index.css';
 
 import App from './App';
-import NabBar from './components/appbar';
 import config from './config';
 import * as serviceWorker from './serviceWorker';
 
@@ -24,7 +23,6 @@ Amplify.configure({
 ReactDOM.render(
   <React.StrictMode>
   <CssBaseline />
-  <NabBar />
     <App />
   </React.StrictMode>,
   document.getElementById('root')

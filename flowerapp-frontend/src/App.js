@@ -1,63 +1,33 @@
-import React from 'react';
-import { withAuthenticator } from 'aws-amplify-react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import Home from './components/home';
-import './App.css';
+import React from "react";
 
-const signUpConfig = {
-  header: 'Create an Account',
-  hideAllDefaults: false,
-  defaultCountryCode: '1',
-  signUpFields: [
-    {
-      label: 'Name',
-      key: 'name',
-      required: true,
-      displayOrder: 1,
-      type: 'string'
-    },
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import Home from "./components/Home";
+import Signup from "./components/auth/Signup";
+import SignIn from "./components/auth/Signin";
+import Welcome from "./components/auth/Welcome";
+import RequireAuth from "./components/auth/Require-auth";
+import ResetPassword from "./components/auth/Reset-password";
+import MyProfile from "./components/My-profile";
+import MyGroups from "./components/My-groups";
+import "./App.css";
 
-    {
-      label: 'Gender',
-      key: 'gender',
-      required: true,
-      displayOrder: 4,
-      type: 'string'
-    },
-    {
-      label: 'Password',
-      key: 'password',
-      required: true,
-      displayOrder: 5,
-      type: 'password'
-    },
-    {
-      label: 'Birthday',
-      key: 'birthdate',
-      required: true,
-      displayOrder: 6,
-      type: 'date'
-    },
-    {
-      label: 'Locale',
-      key: 'locale',
-      required: true,
-      displayOrder: 7,
-      type: 'string'
-    }
-  ]
-};
-function App() {
-
+const App = () => {
   return (
     <React.Fragment>
-    <BrowserRouter>
+      <BrowserRouter>
         <Switch>
-            <Route path="/" exact={true} component={Home} />
+          <Route path="/signup" component={Signup} />
+          <Route path="/signin" component={SignIn} />
+          <Route path="/welcome" component={Welcome} />
+          <Route path="/reset-password" component={ResetPassword} />
+          <Route path="/" exact={true} component={RequireAuth(Home)} />
+          <Route path="/my-profile" component={RequireAuth(MyProfile)} />
+          <Route path="/my-groups" component={RequireAuth(MyGroups)} />
+          <Route component={() => <h1>404</h1>} />
         </Switch>
-    </BrowserRouter>
+      </BrowserRouter>
     </React.Fragment>
   );
-}
+};
 
-export default withAuthenticator(App,{signUpConfig});
+export default App;

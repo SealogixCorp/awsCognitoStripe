@@ -18,26 +18,27 @@
  * Module dependencies.
  */
 
-var User = require('../models/User');
-var https = require('https');
-var http = require('http');
-var _this = this;
+const User = require('../models/User');
+const https = require('https');
+const http = require('http');
+
+const _this = this;
 const crypto = require('crypto');
 
-var mongoose = require('mongoose'),
-  Group = require('../models/group'),
-  utils = require('../lib/utils'),
-  encryptor = require('simple-encryptor')({
-    key: process.env.SIMPLE_ENCRYPTOR_KEY
-  }),
-  nodemailer = require('nodemailer'),
-  handlebars = require('handlebars'),
-  fs = require('fs-extended'),
-  path = require('path'),
-  moment = require('moment'),
-  ObjectId = require('mongoose').Types.ObjectId,
-  uniqid = require('uniqid'),
-  i18n = require('i18n');
+const mongoose = require('mongoose');
+const encryptor = require('simple-encryptor')({
+  key: process.env.SIMPLE_ENCRYPTOR_KEY
+});
+const nodemailer = require('nodemailer');
+const handlebars = require('handlebars');
+const fs = require('fs-extended');
+const path = require('path');
+const moment = require('moment');
+const { ObjectId } = require('mongoose').Types;
+const uniqid = require('uniqid');
+const i18n = require('i18n');
+const utils = require('../lib/utils');
+const Group = require('../models/group');
 
 /**
  * GET /groups of all groups
@@ -46,39 +47,37 @@ var mongoose = require('mongoose'),
 exports.getGroups = function (req, res, next) {
   console.log('got to getGroups');
   moment().format('YYYY MM DD');
-  var object = {};
-  var now = moment();
-  Group.find({}, function (err, groups) {
+  const object = {};
+  const now = moment();
+  Group.find({}, (err, groups) => {
     if (err) {
       utils.errLog(req, res, 'groups.getGroups.1', err, true);
+    } else if (groups) {
+      groups.forEach((group) => {
+        group.ona = encryptor.decrypt(groupData[i].ona);
+        for (i = 0; i < group.mem.length; i++) {
+          group.mem.mNa = encryptor.decrypt(group.mem.mNa);
+          group.mem.eml = encryptor.decrypt(group.mem.encryptedEmail);
+          delete group.mem.encryptedEmail;
+        }
+        for (i = 0; i < group.inv.length; i++) {
+          group.inv.eml = encryptor.decrypt(group.inv.encryptedEmail);
+          delete group.inv.encryptedEmail;
+        }
+      });
+      // .todo unencrypt name and email and limit fields
+      let returnData = {
+        NAME: i18n.__('NAME'),
+        CATEGORY: i18n.__('CATEGORY'),
+        OWNER: i18n.__('OWNER'),
+        MEMBERS: i18n.__('MEMBERS'),
+        LAST_ACTIVE: i18n.__('LAST_ACTIVE')
+      };
+      returnData = utils.loadHeaderText(req, res, returnData);
+      returnData = utils.loadTranslationsText(req, res, returnData);
+      res.send({ success: true }, groups);
     } else {
-      if (groups) {
-        groups.forEach(function (group) {
-          group.ona = encryptor.decrypt(groupData[i].ona);
-          for (i = 0; i < group.mem.length; i++) {
-            group.mem.mNa = encryptor.decrypt(group.mem.mNa);
-            group.mem.eml = encryptor.decrypt(group.mem.encryptedEmail);
-            delete group.mem.encryptedEmail;
-          }
-          for (i = 0; i < group.inv.length; i++) {
-            group.inv.eml = encryptor.decrypt(group.inv.encryptedEmail);
-            delete group.inv.encryptedEmail;
-          }
-        });
-        // .todo unencrypt name and email and limit fields
-        var returnData = {
-          NAME: i18n.__('NAME'),
-          CATEGORY: i18n.__('CATEGORY'),
-          OWNER: i18n.__('OWNER'),
-          MEMBERS: i18n.__('MEMBERS'),
-          LAST_ACTIVE: i18n.__('LAST_ACTIVE')
-        };
-        returnData = utils.loadHeaderText(req, res, returnData);
-        returnData = utils.loadTranslationsText(req, res, returnData);
-        res.send({success: true}, groups);
-      } else {
-        res.send({success: false, error: 'Groups not found'});
-      }
+      res.send({ success: false, error: 'Groups not found' });
     }
   });
 };
@@ -87,15 +86,15 @@ exports.getGroups = function (req, res, next) {
  * Load Groups
  */
 
-exports.getGroupsList = function(req, res, next) {
-  const userId = req.param("userId");
-  const groupId = req.param("groupId");
-  const groupTit = req.param("groupTit");
-  const groupOwner = req.param("groupOwner");
-  const groupLas = req.param("groupLas");
-  const start = parseInt(req.param("start"));
-  const page = parseInt(req.param("page"));
-  const limit = parseInt(req.param("limit"));
+exports.getGroupsList = function (req, res, next) {
+  const userId = req.param('userId');
+  const groupId = req.param('groupId');
+  const groupTit = req.param('groupTit');
+  const groupOwner = req.param('groupOwner');
+  const groupLas = req.param('groupLas');
+  const start = parseInt(req.param('start'));
+  const page = parseInt(req.param('page'));
+  const limit = parseInt(req.param('limit'));
 
   const obj = {};
   if (userId) {
@@ -127,7 +126,7 @@ exports.getGroupsList = function(req, res, next) {
   // collection.find().skip(pageSize*(pageNum-1)).limit(pageSize);
   Group.find(obj, fields, (err, groups) => {
     if (err) {
-      utils.errLog(req, res, "administrators.getGroupsList.1", err, true);
+      utils.errLog(req, res, 'administrators.getGroupsList.1', err, true);
     }
     res.send(groups);
     // }).sort({'username': 1});
@@ -141,14 +140,14 @@ exports.getGroupsList = function(req, res, next) {
  * Load detailed group data
  */
 
-exports.getGroupData = function(req, res, next) {
+exports.getGroupData = function (req, res, next) {
   // .todo decrypt data
-  const groupId = req.param("groupId");
+  const groupId = req.param('groupId');
   const obj = { _id: groupId };
 
   Group.findOne(obj, (err, group) => {
     if (err) {
-      utils.errLog(req, res, "administrators.getGroupData.1", err, true);
+      utils.errLog(req, res, 'administrators.getGroupData.1', err, true);
     }
     if (group) {
       if (req.user && groupData.mem.length) {
@@ -174,31 +173,25 @@ exports.getGroupData = function(req, res, next) {
           }
 
           for (var i = 0; i < groupData.mem.length; i++) {
-            returnData.groupData.mem[i].mNa = encryptor.decrypt(
-              groupData.mem[i].mNa
-            );
-            returnData.groupData.mem[i].eml = encryptor.decrypt(
-              groupData.mem[i].encryptedEmail
-            );
+            returnData.groupData.mem[i].mNa = encryptor.decrypt(groupData.mem[i].mNa);
+            returnData.groupData.mem[i].eml = encryptor.decrypt(groupData.mem[i].encryptedEmail);
             delete returnData.groupData.mem[i].encryptedEmail;
-            returnData.groupData.mem[i].lasActive = moment(
-              groupData.mem[i].las
-            ).format("YYYY-MM-DD");
+            returnData.groupData.mem[i].lasActive = moment(groupData.mem[i].las).format('YYYY-MM-DD');
           }
-          if (config.loginFrom === "mobile") {
-            res.send({ success: true, data: returnData, callViewURL: "group" });
+          if (config.loginFrom === 'mobile') {
+            res.send({ success: true, data: returnData, callViewURL: 'group' });
           } else {
-            res.render("groups/group", returnData);
+            res.render('groups/group', returnData);
           }
         } else {
           res.send({
             success: false,
-            error: "Current User not Member of Group"
+            error: 'Current User not Member of Group'
           });
         }
       }
     } else {
-      res.send({ success: false, error: "GroupId not found" });
+      res.send({ success: false, error: 'GroupId not found' });
     }
 
     // }).sort({'username': 1});
@@ -214,7 +207,7 @@ exports.getMygroups = function (req, res, next) {
   // moment().format('YYYY MM DD');
   // var object = {};
   // var now = moment();
-  var returnData = {
+  let returnData = {
     title: i18n.__('MY_GROUPS'),
     MY_GROUPS: i18n.__('MY_GROUPS'),
     CREATE_GROUP: i18n.__('CREATE_GROUP'),
@@ -230,7 +223,7 @@ exports.getMygroups = function (req, res, next) {
     PLEASE_SELECT_GROUP_TO_EDIT: i18n.__('PLEASE_SELECT_GROUP_TO_EDIT')
   };
 
-  var groups = [
+  const groups = [
     {
       id: '5baf2582d4e714382632d12a',
       tit: 'testTitle',
@@ -377,23 +370,21 @@ exports.getMygroups = function (req, res, next) {
     }
   ];
 
-  var object = {};
-  var now = moment();
+  const object = {};
+  const now = moment();
 
   returnData = utils.loadHeaderText(req, res, returnData);
   returnData = utils.loadTranslationsText(req, res, returnData);
   returnData.csrf = res.locals._csrf;
   returnData.groupOwner = false;
 
-  User.find({_id: ObjectId(req.user._id)}, {groups: 1}, function (
-    err,
-    groups
-  ) {
+  User.find({ _id: ObjectId(req.user._id) }, { groups: 1 }, (err,
+    groups) => {
     if (err) {
       utils.errLog(req, res, 'users.getAccountGroups.1', err, true);
     } else {
       // find in
-      var fields = {
+      const fields = {
         gid: 1,
         cat: 1,
         tit: 1,
@@ -404,10 +395,8 @@ exports.getMygroups = function (req, res, next) {
         las: 1
       };
       if (groups.length) {
-        Group.find({_id: {$in: groups.gid}}, fields, function (
-          error,
-          groupData
-        ) {
+        Group.find({ _id: { $in: groups.gid } }, fields, (error,
+          groupData) => {
           if (err) {
             utils.errLog(req, res, 'users.getAccountGroups.2', err, true);
           } else {
@@ -435,23 +424,23 @@ exports.getMygroups = function (req, res, next) {
  * Load group Invites
  */
 
-exports.getGroupInvites = function(req, res, next) {
-  const groupId = req.param("groupId");
+exports.getGroupInvites = function (req, res, next) {
+  const groupId = req.param('groupId');
   const obj = { _id: groupId };
 
   Group.findOne(obj, { inv: 1 }, (err, group) => {
     if (err) {
-      utils.errLog(req, res, "administrators.getGroupMembers.1", err, true);
+      utils.errLog(req, res, 'administrators.getGroupMembers.1', err, true);
     }
     if (group) {
-      var returnData = group.inv;
-      for (var i = 0; i < returnData.length; i++) {
+      const returnData = group.inv;
+      for (let i = 0; i < returnData.length; i++) {
         returnData[i].eml = encryptor.decrypt(returnData[i].encryptedEmail);
         delete returnData[i].encryptedEmail;
       }
       res.send(returnData);
     } else {
-      res.send({ success: false, error: "Members not found" });
+      res.send({ success: false, error: 'Members not found' });
     }
     // }).sort({'username': 1});
   });
@@ -461,24 +450,24 @@ exports.getGroupInvites = function(req, res, next) {
  * Load group Members
  */
 
-exports.getGroupMembers = function(req, res, next) {
-  const groupId = req.param("groupId");
+exports.getGroupMembers = function (req, res, next) {
+  const groupId = req.param('groupId');
   const obj = { _id: groupId };
 
   Group.findOne(obj, { mem: 1 }, (err, group) => {
     if (err) {
-      utils.errLog(req, res, "administrators.getGroupMembers.1", err, true);
+      utils.errLog(req, res, 'administrators.getGroupMembers.1', err, true);
     }
     if (group.mem) {
-      var returnData = group.mem;
-      for (var i = 0; i < returnData.length; i++) {
+      const returnData = group.mem;
+      for (let i = 0; i < returnData.length; i++) {
         returnData[i].mNa = encryptor.decrypt(returnData.mNa);
         returnData[i].eml = encryptor.decrypt(returnData.encryptedEmail);
         delete returnData[i].encryptedEmail;
       }
       res.send(returnData);
     } else {
-      res.send({ success: false, error: "Members not found" });
+      res.send({ success: false, error: 'Members not found' });
     }
     // }).sort({'username': 1});
   });
@@ -489,13 +478,13 @@ exports.getGroupMembers = function(req, res, next) {
  *
  */
 exports.getGroup = function (req, res, next) {
-  var groupId = req.param('groupId');
+  const groupId = req.param('groupId');
   console.log('group id');
   console.log(groupId);
   // moment().format('YYYY MM DD');
   // var object = {};
   // var now = moment();
-  var returnData = {
+  let returnData = {
     title: i18n.__('GROUP_DATA'),
     GROUP_DATA: i18n.__('GROUP_DATA'),
     ARE_YOU_A_HUMAN: i18n.__('ARE_YOU_A_HUMAN'),
@@ -515,7 +504,7 @@ exports.getGroup = function (req, res, next) {
     LAST_INVITED: i18n.__('LAST_INVITED')
   };
 
-  var groupData = {
+  const groupData = {
     tit: 'my group',
     des:
       'my group description d    llllllllllllllllll llllllllllllll llllllllllll llllllllllll ',
@@ -576,11 +565,11 @@ exports.getGroup = function (req, res, next) {
   returnData.csrf = res.locals._csrf;
   returnData.groupOwner = false;
 
-  var object = {};
-  var now = moment();
-  var userId = req.param('userId');
+  const object = {};
+  const now = moment();
+  const userId = req.param('userId');
   if (groupId) {
-    var fields = {
+    const fields = {
       gid: 1,
       cat: 1,
       tit: 1,
@@ -594,15 +583,13 @@ exports.getGroup = function (req, res, next) {
       las: 1
     };
     if (ObjectId.isValid(groupId)) {
-      Group.findOne({_id: ObjectId(groupId)}, fields, function (
-        error,
-        groupData
-      ) {
+      Group.findOne({ _id: ObjectId(groupId) }, fields, (error,
+        groupData) => {
         if (error) {
           utils.errLog(req, res, 'users.getAccountGroups.2', error, true);
         } else {
           // Check to see if user is part of group
-          var userFound = false;
+          let userFound = false;
           if (groupData) {
             if (req.user && groupData.mem.length) {
               for (var i = 0; i < groupData.mem.length; i++) {
@@ -627,16 +614,10 @@ exports.getGroup = function (req, res, next) {
                 }
 
                 for (var i = 0; i < groupData.mem.length; i++) {
-                  returnData.groupData.mem[i].mNa = encryptor.decrypt(
-                    groupData.mem[i].mNa
-                  );
-                  returnData.groupData.mem[i].eml = encryptor.decrypt(
-                    groupData.mem[i].encryptedEmail
-                  );
+                  returnData.groupData.mem[i].mNa = encryptor.decrypt(groupData.mem[i].mNa);
+                  returnData.groupData.mem[i].eml = encryptor.decrypt(groupData.mem[i].encryptedEmail);
                   delete returnData.groupData.mem[i].encryptedEmail;
-                  returnData.groupData.mem[i].lasActive = moment(
-                    groupData.mem[i].las
-                  ).format('YYYY-MM-DD');
+                  returnData.groupData.mem[i].lasActive = moment(groupData.mem[i].las).format('YYYY-MM-DD');
                 }
                 res.render('groups/group', returnData);
               } else {
@@ -647,7 +628,7 @@ exports.getGroup = function (req, res, next) {
               }
             }
           } else {
-            res.send({success: false, error: 'GroupId not found'});
+            res.send({ success: false, error: 'GroupId not found' });
           }
         }
       });
@@ -660,7 +641,7 @@ exports.getGroup = function (req, res, next) {
  *
  */
 exports.getCreateGroup = function (req, res, next) {
-  var returnData = {
+  let returnData = {
     title: 'Create Group',
     CREATE_GROUP: i18n.__('CREATE_GROUP'),
     NAME: i18n.__('NAME'),
@@ -682,24 +663,25 @@ exports.getCreateGroup = function (req, res, next) {
  */
 
 exports.postCreateGroup = function (req, res) {
-  var tit = req.param('tit');
-  var cat = req.param('cat');
-  var des = req.param('des');
-  var web = req.param('web');
+  const tit = req.param('tit');
+  const cat = req.param('cat');
+  const des = req.param('des');
+  const web = req.param('web');
 
-  var obj = {
+  const obj = {
     oid: req.user._id,
     // ona: req.user.profile.name,
-    tit: tit,
-    des: des,
-    cat: cat,
-    web: web
+    tit,
+    des,
+    cat,
+    web
   };
+  console.log(obj, req.user);
 
   obj.ona = encryptor.encrypt(req.user.profile.name); // .ToDo RMS encrypted to match encrypted User profile or data from cognito
 
-  var group = new Group(obj);
-  group.save(function (err, newGroup) {
+  const group = new Group(obj);
+  group.save((err, newGroup) => {
     if (err) {
       utils.errLog(req, res, 'groups.createGroup.1', err, true);
     } else {
@@ -714,24 +696,24 @@ exports.postCreateGroup = function (req, res) {
  */
 
 exports.postUpdateGroup = function (req, res) {
-  var tit = req.param('tit');
-  var cat = req.param('cat');
-  var des = req.param('des');
-  var web = req.param('web');
+  const tit = req.param('tit');
+  const cat = req.param('cat');
+  const des = req.param('des');
+  const web = req.param('web');
 
-  var obj = {
+  const obj = {
     oid: req.user._id,
     // ona: req.user.profile.name,
-    tit: tit,
-    des: des,
-    cat: cat,
-    web: web
+    tit,
+    des,
+    cat,
+    web
   };
+  console.log(obj, req.user);
+  // obj.ona = encryptor.encrypt(req.user.profile.name); // .ToDo RMS encrypted to match encrypted User profile or data from cognito
 
-  obj.ona = encryptor.encrypt(req.user.profile.name); // .ToDo RMS encrypted to match encrypted User profile or data from cognito
-
-  var group = new Group(obj);
-  group.save(function (err, newGroup) {
+  const group = new Group(obj);
+  group.save((err, newGroup) => {
     if (err) {
       utils.errLog(req, res, 'groups.createGroup.1', err, true);
     } else {
@@ -746,27 +728,25 @@ exports.postUpdateGroup = function (req, res) {
  */
 
 exports.deleteGroup = function (req, res) {
-  var groupId = req.param('groupId');
-  var data = req.param('data');
+  const groupId = req.param('groupId');
+  const data = req.param('data');
 
-  Group.findOne({_id: ObjectId(groupId)}, function (err, group) {
+  Group.findOne({ _id: ObjectId(groupId) }, (err, group) => {
     if (err) {
       utils.errLog(req, res, 'groups.deleteGroup.1', err, true);
     } else {
       // Check to make sure current user is owner of group
       if (group.oid.equals(req.user._id)) {
         // remove all users from group
-        User.update({}, {$pull: {groups: {gid: group._id}}}, function (
-          err
-        ) {
+        User.update({}, { $pull: { groups: { gid: group._id } } }, (err) => {
           if (err) {
             utils.errLog(req, res, 'groups.deleteGroup.2', err, true);
           } else {
-            group.remove({_id: ObjectId(group._id)}, function (err) {
+            group.remove({ _id: ObjectId(group._id) }, (err) => {
               if (err) {
                 utils.errLog(req, res, 'groups.deleteGroup.3', err, true);
               } else {
-                res.send({success: true});
+                res.send({ success: true });
               }
             });
           }
@@ -838,12 +818,12 @@ exports.deleteGroup = function (req, res) {
  */
 
 exports.getGroupInvite = function (req, res) {
-  var groupId = req.param('groupId');
+  const groupId = req.param('groupId');
 
   // moment().format('YYYY MM DD');
   // var object = {};
   // var now = moment();
-  var returnData = {
+  let returnData = {
     title: i18n.__('INVITE_TO_GROUP'),
     INVITE_NEW_MEMBER_TO_GROUP: i18n.__('INVITE_NEW_MEMBER_TO_GROUP'),
     CATEGORY: i18n.__('CATEGORY'),
@@ -856,9 +836,9 @@ exports.getGroupInvite = function (req, res) {
   returnData = utils.loadTranslationsText(req, res, returnData);
   returnData.csrf = res.locals._csrf;
 
-  var userId = req.param('userId');
+  const userId = req.param('userId');
   if (groupId) {
-    var fields = {
+    const fields = {
       gid: 1,
       tit: 1,
       cat: 1,
@@ -867,25 +847,21 @@ exports.getGroupInvite = function (req, res) {
       gTyp: 1
     };
     if (ObjectId.isValid(groupId)) {
-      Group.findOne({_id: ObjectId(groupId)}, fields, function (
-        error,
-        groupData
-      ) {
+      Group.findOne({ _id: ObjectId(groupId) }, fields, (error,
+        groupData) => {
         if (error) {
           utils.errLog(req, res, 'groups.getGroupInvite.1', error, true);
+        } else if (req.user._id.equals(groupData.oid)) {
+          // only group owner can make invites
+          returnData.groupData = {
+            gid: groupData._id,
+            cat: groupData.cat,
+            tit: groupData.tit,
+            des: groupData.des
+          };
+          res.render('groups/groupInvite', returnData);
         } else {
-          if (req.user._id.equals(groupData.oid)) {
-            // only group owner can make invites
-            returnData.groupData = {
-              gid: groupData._id,
-              cat: groupData.cat,
-              tit: groupData.tit,
-              des: groupData.des
-            };
-            res.render('groups/groupInvite', returnData);
-          } else {
-            res.redirect('/myGroups');
-          }
+          res.redirect('/myGroups');
         }
       });
     }
@@ -898,11 +874,11 @@ exports.getGroupInvite = function (req, res) {
 
 exports.postAcceptUser = function (req, res) {
   // .todo RMS send name
-  var groupId = req.param('groupId');
-  var invitationId = req.param('invitationId');
+  const groupId = req.param('groupId');
+  const invitationId = req.param('invitationId');
 
-  var email = '';
-  Group.findOne({_id: ObjectId(groupId)}, function (err, group) {
+  let email = '';
+  Group.findOne({ _id: ObjectId(groupId) }, (err, group) => {
     if (err) {
       utils.errLog(req, res, 'groups.acceptUser.1', err, true);
     } else {
@@ -914,19 +890,17 @@ exports.postAcceptUser = function (req, res) {
         }
       }
       if (email) {
-        User.findOne({email: email}, function (err, mongoUser) {
+        User.findOne({ email }, (err, mongoUser) => {
           if (err) {
             utils.errLog(req, res, 'groups.acceptUser.2', err, true);
+          } else if (mongoUser) {
+            utils.addUser(req, res, mongoUser, groupId, true);
           } else {
-            if (mongoUser) {
-              utils.addUser(req, res, mongoUser, groupId, true);
-            } else {
-              return res.redirect('/signup');
-            }
+            return res.redirect('/signup');
           }
         });
       } else {
-        res.send({success: true, err: i18n._('INVITATION_NOT_FOUND')}); // .todo RMS figure out how to send back message to url cli
+        res.send({ success: true, err: i18n._('INVITATION_NOT_FOUND') }); // .todo RMS figure out how to send back message to url cli
       }
     }
   });
@@ -938,32 +912,32 @@ exports.postAcceptUser = function (req, res) {
 
 exports.postInviteUser = function (req, res) {
   // .todo RMS send name
-  var groupId = req.param('groupId');
-  var invitedUserEmail = req.param('email');
-  var transporter = nodemailer.createTransport({
+  const groupId = req.param('groupId');
+  let invitedUserEmail = req.param('email');
+  const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
       user: process.env.SENDGRID_USER,
       pass: process.env.SENDGRID_PASSWORD
     }
   });
-  var now = moment();
+  const now = moment();
   if (invitedUserEmail && groupId) {
     invitedUserEmail = invitedUserEmail.toLowerCase();
     // get group owners name
     // var nam = utils.getName(req, res, req.user);
 
-    var nam = req.user.profile.name;
+    const nam = req.user.profile.name;
 
-    Group.findOne({_id: ObjectId(groupId)}, function (err, group) {
+    Group.findOne({ _id: ObjectId(groupId) }, (err, group) => {
       if (err) {
         utils.errLog(req, res, 'groups.inviteUser.1', err, true);
       } else {
         // check that logged in user is owner of group.
         if (group.oid.equals(req.user._id)) {
-          var invitationId = uniqid();
-          var acceptUrl = './invitation/' + group._id + '/' + invitationId;
-          var existingInvitation = false;
+          const invitationId = uniqid();
+          const acceptUrl = `./invitation/${group._id}/${invitationId}`;
+          let existingInvitation = false;
           // check if email already invited and if it is less than 3 then update group and invite
 
           for (i = 0; i < group.inv.length; i++) {
@@ -971,9 +945,9 @@ exports.postInviteUser = function (req, res) {
               existingInvitation = true;
             }
           }
-          var data = {
-            acceptUrl: acceptUrl,
-            nam: nam,
+          const data = {
+            acceptUrl,
+            nam,
             tit: group.tit
           };
 
@@ -984,9 +958,8 @@ exports.postInviteUser = function (req, res) {
                 msg: i18n._('MAX_INVITE_RETRUY_EXCEEDED_WITH_NO_RESPONSE')
               });
               return;
-            } else {
-              group.inv[i].nIv++;
             }
+            group.inv[i].nIv++;
           }
 
           // // check to see if invited user is a member and membership status.
@@ -997,7 +970,7 @@ exports.postInviteUser = function (req, res) {
           // User.findOne({ email: hashEmail }, function(err, mongoUser) {
           // check to see if invited user is a member and membership status.
 
-          User.findOne({email: invitedUserEmail}, function (err, mongoUser) {
+          User.findOne({ email: invitedUserEmail }, (err, mongoUser) => {
             if (err) {
               utils.errLog(req, res, 'groups.inviteUser.2', err, true);
             } else {
@@ -1011,110 +984,92 @@ exports.postInviteUser = function (req, res) {
                 var templateName = 'group_non_member_Invite.handlebars';
               }
 
-              var language = 'en';
+              let language = 'en';
               if (req.user.profile.language) {
                 language = req.user.profile.language;
               }
 
-              fs.readFile(
-                path.resolve(
-                  __dirname,
-                  '../views/htmlPdf/' + language + '/' + templateName
-                ),
-                function (err, template) {
-                  if (err) {
-                    utils.errLog(req, res, 'groups.inviteUser.3', err, true);
-                  } else {
-                    // make the buffer into a string
-                    var source = template.toString();
-                    // console.log(emailId);
-                    // call the render function
-                    var template2 = handlebars.compile(source);
-                    var outputString = template2(data);
+              fs.readFile(path.resolve(__dirname,
+                `../views/htmlPdf/${language}/${templateName}`),
+              (err, template) => {
+                if (err) {
+                  utils.errLog(req, res, 'groups.inviteUser.3', err, true);
+                } else {
+                  // make the buffer into a string
+                  const source = template.toString();
+                  // console.log(emailId);
+                  // call the render function
+                  const template2 = handlebars.compile(source);
+                  const outputString = template2(data);
 
-                    var eMailData = {
-                      to: invitedUserEmail,
-                      subject:
-                        i18n.__(
-                          'YOU_HAVE_BEEN_INVITED_TO_JOIN_A_FLOWER_ARRANGING_GROUP'
-                        ) +
-                        group.tit +
-                        i18n.__('_BY_') +
-                        nam,
-                      message: outputString
-                    };
+                  const eMailData = {
+                    to: invitedUserEmail,
+                    subject:
+                        i18n.__('YOU_HAVE_BEEN_INVITED_TO_JOIN_A_FLOWER_ARRANGING_GROUP')
+                        + group.tit
+                        + i18n.__('_BY_')
+                        + nam,
+                    message: outputString
+                  };
 
-                    // invite user to group
-                    transporter.sendMail(
-                      {
-                        from: 'flowerarchitect@gmail.com',
-                        // to: 'rick.sturgeon@yahoo.com',
-                        to: eMailData.to,
-                        subject: eMailData.subject,
-                        html: eMailData.message
-                      },
-                      function (err, info) {
-                        if (err) {
-                          utils.errLog(
-                            req,
-                            res,
-                            'groups.inviteUser.4',
-                            'mail not sent' + err,
-                            true
-                          );
-                        } else {
-                          Group.update(
-                            {_id: ObjectId(mongoUser._id)},
-                            {
-                              $addToSet: {
-                                inv: {
-                                  gid: groupId,
-                                  iid: invitationId, // invitation Id
-                                  eml: crypto
-                                    .createHash('md5')
-                                    .update(invitedUserEmail)
-                                    .digest('hex'),
-                                  encryptedEmail: encryptor.encrypt(
-                                    invitedUserEmail
-                                  ), // invitee email
-                                  las: now
-                                }
-                              }
-                              // Person.update({'items.id': 2}, {'$set': {
-                              //         'items.$.name': 'updated item2',
-                              //         'items.$.value': 'two updated'
-                              //     }}, function(err) { ...
-                            },
-                            function (err) {
-                              if (err) {
-                                utils.errLog(
-                                  req,
-                                  res,
-                                  'groups.inviteUser.5',
-                                  err,
-                                  true
-                                );
-                              } else {
-                                res.redirect('/group/' + groupId);
-                              }
+                  // invite user to group
+                  transporter.sendMail({
+                    from: 'flowerarchitect@gmail.com',
+                    // to: 'rick.sturgeon@yahoo.com',
+                    to: eMailData.to,
+                    subject: eMailData.subject,
+                    html: eMailData.message
+                  },
+                  (err, info) => {
+                    if (err) {
+                      utils.errLog(req,
+                        res,
+                        'groups.inviteUser.4',
+                        `mail not sent${err}`,
+                        true);
+                    } else {
+                      Group.update({ _id: ObjectId(mongoUser._id) },
+                        {
+                          $addToSet: {
+                            inv: {
+                              gid: groupId,
+                              iid: invitationId, // invitation Id
+                              eml: crypto
+                                .createHash('md5')
+                                .update(invitedUserEmail)
+                                .digest('hex'),
+                              encryptedEmail: encryptor.encrypt(invitedUserEmail), // invitee email
+                              las: now
                             }
-                          );
-                        }
-                      }
-                    );
-                  }
+                          }
+                          // Person.update({'items.id': 2}, {'$set': {
+                          //         'items.$.name': 'updated item2',
+                          //         'items.$.value': 'two updated'
+                          //     }}, function(err) { ...
+                        },
+                        (err) => {
+                          if (err) {
+                            utils.errLog(req,
+                              res,
+                              'groups.inviteUser.5',
+                              err,
+                              true);
+                          } else {
+                            res.redirect(`/group/${groupId}`);
+                          }
+                        });
+                    }
+                  });
                 }
-              );
+              });
             }
           });
         } else {
-          utils.errLog(
-            req,
+          utils.errLog(req,
             res,
             'groups.inviteUser.6',
             'You must be the group owner to add users',
-            true
-          );
+            true);
         }
       }
     });
@@ -1126,62 +1081,52 @@ exports.postInviteUser = function (req, res) {
  */
 
 exports.deleteMember = function (req, res) {
-  var groupId = req.param('groupId');
-  var memberId = req.param('memberId');
-  Group.findOne({_id: ObjectId(groupId)}, function (err, group) {
+  const groupId = req.param('groupId');
+  const memberId = req.param('memberId');
+  Group.findOne({ _id: ObjectId(groupId) }, (err, group) => {
     if (err) {
       utils.errLog(req, res, 'groups.deleteUser.1', err, true);
-    } else {
-      if (
-        (req.user._id.equals(memberId) || req.user._id.equals(group.oid)) &&
-        !group.oid.equals(memberId)
-      ) {
-        User.findOne({_id: ObjectId(memberId)}, function (err, mongoUser) {
-          if (err) {
-            utils.errLog(req, res, 'groups.deleteUser.2', err, true);
-          } else {
-            Group.update(
-              {_id: ObjectId(group._id)},
-              {$pull: {mem: {mid: mongoUser._id}}},
-              function (err) {
-                if (err) {
-                  utils.errLog(req, res, 'groups.deleteUser.3', err, true);
-                } else {
-                  User.update(
-                    {_id: ObjectId(mongoUser._id)},
-                    {$pull: {groups: {gid: group._id}}},
-                    function (err) {
-                      if (err) {
-                        utils.errLog(
-                          req,
-                          res,
-                          'groups.deleteUser.4',
-                          err,
-                          true
-                        );
-                      } else {
-                        res.send({success: true});
-                      }
-                    }
-                  );
-                }
-              }
-            );
-          }
-        });
-      } else {
-        if (group.oid.equals(memberId)) {
-          res.send({
-            success: false,
-            msg: i18n.__('GROUP_OWNER_CAN_NOT_DELETE_THEMSELVES')
-          });
+    } else if (
+      (req.user._id.equals(memberId) || req.user._id.equals(group.oid))
+        && !group.oid.equals(memberId)
+    ) {
+      User.findOne({ _id: ObjectId(memberId) }, (err, mongoUser) => {
+        if (err) {
+          utils.errLog(req, res, 'groups.deleteUser.2', err, true);
         } else {
-          res.send({
-            success: false,
-            msg: i18n.__('YOU_CAN_ONLY_DELETE_YOURSELF_FROM_THE_GROUP')
-          });
+          Group.update({ _id: ObjectId(group._id) },
+            { $pull: { mem: { mid: mongoUser._id } } },
+            (err) => {
+              if (err) {
+                utils.errLog(req, res, 'groups.deleteUser.3', err, true);
+              } else {
+                User.update({ _id: ObjectId(mongoUser._id) },
+                  { $pull: { groups: { gid: group._id } } },
+                  (err) => {
+                    if (err) {
+                      utils.errLog(req,
+                        res,
+                        'groups.deleteUser.4',
+                        err,
+                        true);
+                    } else {
+                      res.send({ success: true });
+                    }
+                  });
+              }
+            });
         }
-      }
+      });
+    } else if (group.oid.equals(memberId)) {
+      res.send({
+        success: false,
+        msg: i18n.__('GROUP_OWNER_CAN_NOT_DELETE_THEMSELVES')
+      });
+    } else {
+      res.send({
+        success: false,
+        msg: i18n.__('YOU_CAN_ONLY_DELETE_YOURSELF_FROM_THE_GROUP')
+      });
     }
   });
 };
@@ -1191,27 +1136,23 @@ exports.deleteMember = function (req, res) {
  */
 
 exports.deleteInvite = function (req, res) {
-  var groupId = req.param('groupId');
-  var inviteId = req.param('inviteId');
-  Group.update(
-    {_id: ObjectId(groupId)},
-    {$pull: {inv: {iid: inviteId}}},
-    function (err) {
+  const groupId = req.param('groupId');
+  const inviteId = req.param('inviteId');
+  Group.update({ _id: ObjectId(groupId) },
+    { $pull: { inv: { iid: inviteId } } },
+    (err) => {
       if (err) {
         utils.errLog(req, res, 'groups.deleteInvite.1', err, true);
       } else {
-        User.update(
-          {_id: ObjectId(groupId)},
-          {$pull: {groups: {gid: group._id}}},
-          function (err) {
+        User.update({ _id: ObjectId(groupId) },
+          { $pull: { groups: { gid: group._id } } },
+          (err) => {
             if (err) {
               utils.errLog(req, res, 'groups.deleteInvite.2', err, true);
             } else {
-              res.send({success: true});
+              res.send({ success: true });
             }
-          }
-        );
+          });
       }
-    }
-  );
+    });
 };
