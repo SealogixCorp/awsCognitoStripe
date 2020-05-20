@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Auth } from "aws-amplify";
 import { useHistory } from "react-router-dom";
+import { useToasts } from "react-toast-notifications";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -35,6 +36,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default () => {
+  const { addToast } = useToasts();
   const history = useHistory();
   const classes = useStyles();
   const [email, setEmail] = useState("");
@@ -66,13 +68,26 @@ export default () => {
         }
       });
       console.log("Singup Successful!");
-      history.push("/signin?signup=true");
-      console.log(signUpResponse);
+      addToast(
+        "You have successfully registered. \n Before login please verify your account. We have sent you an email click on the confirmation link to verify your account.",
+        {
+          appearance: "success",
+          autoDismiss: true,
+          PlacementType: "top-right",
+          autoDismissTimeout: 6000
+        }
+      );
+      history.push("/signin");
     } catch (error) {
       let err = null;
       !error.message ? (err = { message: error }) : (err = error);
 
-      console.log(err.message, "error");
+      addToast(error.message, {
+        appearance: "error",
+        autoDismiss: true,
+        PlacementType: "top-right",
+        autoDismissTimeout: 6000
+      });
       console.log(err);
     }
   };

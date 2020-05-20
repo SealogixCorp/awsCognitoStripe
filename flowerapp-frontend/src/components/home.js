@@ -87,14 +87,11 @@ export default () => {
   });
 
   async function makePayment(token, addresses) {
-    console.log(token, product);
     const response = await axios.post(
       "https://myflowerarchitect.com/account/checkout",
       { token, product }
     );
-    console.log(response);
     const { status } = response.data;
-    console.log("Response:", response.data);
     if (status === "succeeded") {
       console.log("Success! Check email for details");
     } else {

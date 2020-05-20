@@ -1,31 +1,34 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import Amplify from 'aws-amplify';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import './index.css';
+import React from "react";
+import ReactDOM from "react-dom";
+import Amplify from "aws-amplify";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import { ToastProvider, useToasts } from "react-toast-notifications";
+import "./index.css";
 
-import App from './App';
-import config from './config';
-import * as serviceWorker from './serviceWorker';
+import App from "./App";
+import config from "./config";
+import * as serviceWorker from "./serviceWorker";
 
 Amplify.configure({
-    Auth: {
-        // REQUIRED - Amazon Cognito Identity Pool ID
-        identityPoolId: config.cognito.USER_POOL_ID,
-        // REQUIRED - Amazon Cognito Region
-        region: config.cognito.REGION,
-        // OPTIONAL - Amazon Cognito User Pool ID
-        userPoolId: config.cognito.USER_POOL_ID,
-        // OPTIONAL - Amazon Cognito Web Client ID
-        userPoolWebClientId: config.cognito.APP_CLIENT_ID,
-    }
+  Auth: {
+    // REQUIRED - Amazon Cognito Identity Pool ID
+    identityPoolId: config.cognito.USER_POOL_ID,
+    // REQUIRED - Amazon Cognito Region
+    region: config.cognito.REGION,
+    // OPTIONAL - Amazon Cognito User Pool ID
+    userPoolId: config.cognito.USER_POOL_ID,
+    // OPTIONAL - Amazon Cognito Web Client ID
+    userPoolWebClientId: config.cognito.APP_CLIENT_ID
+  }
 });
 ReactDOM.render(
   <React.StrictMode>
-  <CssBaseline />
-    <App />
+    <ToastProvider>
+      <CssBaseline />
+      <App />
+    </ToastProvider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
 
 // If you want your app to work offline and load faster, you can change

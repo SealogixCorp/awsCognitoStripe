@@ -1,5 +1,6 @@
-import React, { useState,useEffect } from "react";
+import React, { useState } from "react";
 import { Auth } from "aws-amplify";
+import { useToasts } from "react-toast-notifications";
 import { useHistory } from "react-router-dom";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
@@ -11,10 +12,6 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import queryString from 'query-string';
-import Snackbar from "@material-ui/core/Snackbar";
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
 import NavBar from "../Appbar";
 
 const useStyles = makeStyles(theme => ({
@@ -37,12 +34,10 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-
-
 export default () => {
+  const { addToast } = useToasts();
   const history = useHistory();
   const classes = useStyles();
-  const [open, setOpen] = useState(false);
   const [forgotPassword, setForgotPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
@@ -67,7 +62,12 @@ export default () => {
     } catch (error) {
       let err = null;
       !error.message ? (err = { message: error }) : (err = error);
-      console.log(err.message, "error");
+      addToast(error.message, {
+        appearance: "error",
+        autoDismiss: true,
+        PlacementType: "top-right",
+        autoDismissTimeout: 6000
+      });
       console.log(err);
     }
   };
@@ -84,50 +84,31 @@ export default () => {
       const user = await Auth.forgotPassword(username);
       console.log(user);
       console.log(`Welcome ${user.username}`);
+      addToast(
+        "We send you code for reset password. Please enter the code sent in email",
+        {
+          appearance: "success",
+          autoDismiss: true,
+          PlacementType: "top-right",
+          autoDismissTimeout: 6000
+        }
+      );
       history.push("/reset-password");
     } catch (error) {
       let err = null;
       !error.message ? (err = { message: error }) : (err = error);
+      addToast(error.message, {
+        appearance: "error",
+        autoDismiss: true,
+        PlacementType: "top-right",
+        autoDismissTimeout: 6000
+      });
       console.log(err.message, "error");
       console.log(err);
     }
   };
-  useEffect(() => {
-    console.log(history)
-    const values = queryString.parse(history.location.search);
-    console.log(values);
-    if(values.signup){
-      setOpen(true);
-
-    }
-
-  }, [history]);
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpen(false);
-  };
   return (
     <React.Fragment>
-    <Snackbar
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        open={open}
-        autoHideDuration={6000}
-        onClose={handleClose}
-        message={`You have successfully registered. \n Before login please verify your account. We have sent you an email click on the confirmation link to verify your account.`}
-        action={
-          <React.Fragment>
-            <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
-              <CloseIcon fontSize="small" />
-            </IconButton>
-          </React.Fragment>
-        }
-      />
       <NavBar />
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -148,8 +129,9 @@ export default () => {
                       variant="outlined"
                       required
                       fullWidth
+                      placeHolder="Enter username"
                       id="username"
-                      label="Email/ Username"
+                      label="Username"
                       name="username"
                       autoComplete="username"
                       value={username}
@@ -227,22 +209,22 @@ export default () => {
                 </Button>
 
                 <Grid container>
-            <Grid item xs>
-            <Link variant="Button" onClick={handleForgotPassword}>
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-            <Link
-              variant="Button"
-              onClick={() => {
-                history.push("signup");
-              }}
-            >
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
+                  <Grid item xs>
+                    <Link variant="Button" onClick={handleForgotPassword}>
+                      Forgot password?
+                    </Link>
+                  </Grid>
+                  <Grid item>
+                    <Link
+                      variant="Button"
+                      onClick={() => {
+                        history.push("signup");
+                      }}
+                    >
+                      {"Don't have an account? Sign Up"}
+                    </Link>
+                  </Grid>
+                </Grid>
               </form>
             </>
           )}
