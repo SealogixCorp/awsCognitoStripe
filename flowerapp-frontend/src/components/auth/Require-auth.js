@@ -8,6 +8,7 @@ export default ComposedComponent => {
     async componentWillMount() {
       try {
         const user = await Auth.currentAuthenticatedUser();
+        console.log(user);
         if (!user) {
           this.props.history.push("/signin");
         }

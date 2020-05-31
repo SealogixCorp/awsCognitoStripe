@@ -20,7 +20,7 @@ const sass = require('node-sass-middleware');
 const multer = require('multer');
 
 const upload = multer({ dest: path.join(__dirname, 'uploads') });
-const i18n = require("i18n");
+const i18n = require('i18n');
 
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
@@ -35,7 +35,6 @@ const userController = require('./controllers/user');
 const apiController = require('./controllers/api');
 const contactController = require('./controllers/contact');
 const groupsController = require('./controllers/groups');
-
 
 
 /**
@@ -96,7 +95,8 @@ app.use((req, res, next) => {
     // Multer multipart/form-data handling needs to occur before the Lusca CSRF check.
     next();
   } else {
-    lusca.csrf()(req, res, next);
+    next();
+    // lusca.csrf()(req, res, next);
   }
 });
 app.use(lusca.xframe('SAMEORIGIN'));
@@ -108,8 +108,8 @@ app.use((req, res, next) => {
 });
 
 i18n.configure({
-  locales:['en', 'de'],
-  directory: __dirname + '/locales'
+  locales: ['en', 'de'],
+  directory: `${__dirname}/locales`
 });
 
 app.use((req, res, next) => {
@@ -160,50 +160,37 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
 /**
  * Group Routes.
  */
-app.get("/mygroups", groupsController.getMygroups);
-app.get("/group/:groupId", groupsController.getGroup);
+app.get('/mygroups', groupsController.getMygroups);
+app.get('/group/:groupId', groupsController.getGroup);
+app.get('/editgroup/:groupId', groupsController.editGroup);
+app.get('/createGroup', groupsController.getCreateGroup);
+app.get('/groupInvite/:groupId', groupsController.getGroupInvite);
+app.post('group/updateGroup/:groupId', groupsController.postUpdateGroup);
+app.post('/group/create', groupsController.postCreateGroup);
+app.post('/group/delete/:groupId', groupsController.deleteGroup);
+app.post('/group/deleteUser/:groupId/:memberId', groupsController.deleteMember);
+app.post('/group/deleteInvite/:groupId/:inviteId',
+  groupsController.deleteInvite);
+app.post('/groups/acceptUser/:groupId/:invitationId',
+  groupsController.postAcceptUser);
+app.post('/group/invite/:groupId', groupsController.postInviteUser);
 
-app.get("/createGroup", groupsController.getCreateGroup);
-app.get("/groupInvite/:groupId", groupsController.getGroupInvite);
-app.post("group/updateGroup/:groupId", groupsController.postUpdateGroup);
-app.post("/group/create", groupsController.postCreateGroup);
-app.post("/group/delete/:groupId", groupsController.deleteGroup);
-app.post("/group/deleteUser/:groupId/:memberId", groupsController.deleteMember);
-app.post(
-  "/group/deleteInvite/:groupId/:inviteId",
-  groupsController.deleteInvite
-);
-app.post(
-  "/groups/acceptUser/:groupId/:invitationId",
-  groupsController.postAcceptUser
-);
-app.post("/group/invite/:groupId", groupsController.postInviteUser);
-
-app.get(
-  "/administrator/groups/list",
+app.get('/administrator/groups/list',
   passportConfig.isAuthenticated,
   passportConfig.isAuthorized,
-  groupsController.getGroupsList
-);
-app.get(
-  "/administrator/group/data/:groupId",
+  groupsController.getGroupsList);
+app.get('/administrator/group/data/:groupId',
   passportConfig.isAuthenticated,
   passportConfig.isAuthorized,
-  groupsController.getGroupData
-);
-app.get(
-  "/administrator/group/members/:groupId",
+  groupsController.getGroupData);
+app.get('/administrator/group/members/:groupId',
   passportConfig.isAuthenticated,
   passportConfig.isAuthorized,
-  groupsController.getGroupMembers
-);
-app.get(
-  "/administrator/group/invitation/:groupId",
+  groupsController.getGroupMembers);
+app.get('/administrator/group/invitation/:groupId',
   passportConfig.isAuthenticated,
   passportConfig.isAuthorized,
-  groupsController.getGroupInvites
-);
-
+  groupsController.getGroupInvites);
 
 
 /**

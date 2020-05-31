@@ -26,6 +26,7 @@ const _this = this;
 const crypto = require('crypto');
 
 const mongoose = require('mongoose');
+const _ = require('underscore');
 const encryptor = require('simple-encryptor')({
   key: process.env.SIMPLE_ENCRYPTOR_KEY
 });
@@ -56,7 +57,7 @@ exports.getGroups = function (req, res, next) {
       groups.forEach((group) => {
         group.ona = encryptor.decrypt(groupData[i].ona);
         for (i = 0; i < group.mem.length; i++) {
-          group.mem.mNa = encryptor.decrypt(group.mem.mNa);
+          group.mem.mna = encryptor.decrypt(group.mem.mna);
           group.mem.eml = encryptor.decrypt(group.mem.encryptedEmail);
           delete group.mem.encryptedEmail;
         }
@@ -173,7 +174,7 @@ exports.getGroupData = function (req, res, next) {
           }
 
           for (var i = 0; i < groupData.mem.length; i++) {
-            returnData.groupData.mem[i].mNa = encryptor.decrypt(groupData.mem[i].mNa);
+            returnData.groupData.mem[i].mna = encryptor.decrypt(groupData.mem[i].mna);
             returnData.groupData.mem[i].eml = encryptor.decrypt(groupData.mem[i].encryptedEmail);
             delete returnData.groupData.mem[i].encryptedEmail;
             returnData.groupData.mem[i].lasActive = moment(groupData.mem[i].las).format('YYYY-MM-DD');
@@ -223,7 +224,7 @@ exports.getMygroups = function (req, res, next) {
     PLEASE_SELECT_GROUP_TO_EDIT: i18n.__('PLEASE_SELECT_GROUP_TO_EDIT')
   };
 
-  const groups = [
+  let groups = [
     {
       id: '5baf2582d4e714382632d12a',
       tit: 'testTitle',
@@ -378,8 +379,8 @@ exports.getMygroups = function (req, res, next) {
   returnData.csrf = res.locals._csrf;
   returnData.groupOwner = false;
 
-  User.find({ _id: ObjectId(req.user._id) }, { groups: 1 }, (err,
-    groups) => {
+  User.findOne({ _id: ObjectId(req.user._id) }, { groups: 1 }, (err,
+    userGroups) => {
     if (err) {
       utils.errLog(req, res, 'users.getAccountGroups.1', err, true);
     } else {
@@ -394,30 +395,34 @@ exports.getMygroups = function (req, res, next) {
         cre: 1,
         las: 1
       };
-      if (groups.length) {
-        Group.find({ _id: { $in: groups.gid } }, fields, (error,
+      if (userGroups.groups.length > 0) {
+        const grupdIds = _.pluck(userGroups.groups, 'gid');
+        Group.find({ _id: { $in: grupdIds } }, fields, (error,
           groupData) => {
           if (err) {
             utils.errLog(req, res, 'users.getAccountGroups.2', err, true);
           } else {
-            for (i = 0; i < groupData.length; i++) {
+            for (let i = 0; i < groupData.length; i++) {
               groupData[i].ona = encryptor.decrypt(groupData[i].ona);
-              groupData.nbr = groupData.mem.length;
-              delete groupData.mem;
+              groupData.nbr = groupData.mem && groupData.mem.length ? groupData.mem.length : 0;
+              // delete groupData.mem;
             }
             if (req.user._id.equals(groupData.oid)) {
               returnData.groupOwner = true;
             }
-            // console.log('render');
-            // res.render('groups/mygroups', {csrf: res.locals._csrf, groups: groups, returnData});
+            returnData.groups = groupData;
+            groups = groupData;
+
+            res.render('groups/mygroups', returnData);
+            // res.render('groups/mygroups', { csrf: res.locals._csrf, groups: groupData, returnData });
             // res.render('groups/mygroups', {csrf: res.locals._csrf, groups: groupData, returnData});
           }
         });
       }
     }
   });
-  returnData.groups = groups;
-  res.render('groups/mygroups', returnData);
+  // returnData.groups = groups;
+  // res.render('groups/mygroups', returnData);
 };
 
 /**
@@ -461,7 +466,7 @@ exports.getGroupMembers = function (req, res, next) {
     if (group.mem) {
       const returnData = group.mem;
       for (let i = 0; i < returnData.length; i++) {
-        returnData[i].mNa = encryptor.decrypt(returnData.mNa);
+        returnData[i].mna = encryptor.decrypt(returnData.mna);
         returnData[i].eml = encryptor.decrypt(returnData.encryptedEmail);
         delete returnData[i].encryptedEmail;
       }
@@ -519,7 +524,7 @@ exports.getGroup = function (req, res, next) {
       tit: 'testTitle',
       eml: 'test@gmail.com',
       mcr: 'General',
-      mNa: 'OwnerName',
+      mna: 'OwnerName',
       las: '7/9/2018'
     },
     {
@@ -527,7 +532,7 @@ exports.getGroup = function (req, res, next) {
       tit: 'testTitle',
       eml: 'test@gmail.com',
       mcr: 'General',
-      mNa: 'OwnerName',
+      mna: 'OwnerName',
       las: '7/9/2018'
     },
     {
@@ -535,7 +540,7 @@ exports.getGroup = function (req, res, next) {
       tit: 'testTitle',
       eml: 'test@gmail.com',
       mcr: 'General',
-      mNa: 'OwnerName',
+      mna: 'OwnerName',
       las: '7/9/2018'
     }
   ];
@@ -592,7 +597,7 @@ exports.getGroup = function (req, res, next) {
           let userFound = false;
           if (groupData) {
             if (req.user && groupData.mem.length) {
-              for (var i = 0; i < groupData.mem.length; i++) {
+              for (let i = 0; i < groupData.mem.length; i++) {
                 if (req.user._id.equals(groupData.mem[i].mid)) {
                   userFound = true;
                 }
@@ -613,8 +618,8 @@ exports.getGroup = function (req, res, next) {
                   returnData.groupData.inv = groupData.inv;
                 }
 
-                for (var i = 0; i < groupData.mem.length; i++) {
-                  returnData.groupData.mem[i].mNa = encryptor.decrypt(groupData.mem[i].mNa);
+                for (let i = 0; i < groupData.mem.length; i++) {
+                  returnData.groupData.mem[i].mna = encryptor.decrypt(groupData.mem[i].mna);
                   returnData.groupData.mem[i].eml = encryptor.decrypt(groupData.mem[i].encryptedEmail);
                   delete returnData.groupData.mem[i].encryptedEmail;
                   returnData.groupData.mem[i].lasActive = moment(groupData.mem[i].las).format('YYYY-MM-DD');
@@ -635,6 +640,166 @@ exports.getGroup = function (req, res, next) {
     }
   }
 };
+/**
+ * GET /getGroup if user has access
+ *
+ */
+exports.editGroup = function (req, res, next) {
+  const groupId = req.param('groupId');
+  console.log('group id 333');
+  console.log(groupId);
+  let returnData = {
+    title: i18n.__('GROUP_DATA'),
+    GROUP_DATA: i18n.__('GROUP_DATA'),
+    ARE_YOU_A_HUMAN: i18n.__('ARE_YOU_A_HUMAN'),
+    INVITE_NEW_MEMBER: i18n.__('INVITE_NEW_MEMBER'),
+    DELETE_MEMBER: i18n.__('DELETE_MEMBER'),
+    ARE_YOU_A_HUMAN: i18n.__('ARE_YOU_A_HUMAN'),
+    NAME: i18n.__('NAME'),
+    EMAIL: i18n.__('EMAIL'),
+    CATEGORY: i18n.__('CATEGORY'),
+    CREATED: i18n.__('CREATED'),
+    OWNER: i18n.__('OWNER'),
+    MEMBERS: i18n.__('MEMBERS'),
+    INVITATIONS: i18n.__('INVITATIONS'),
+    GROUP_MEMBERS: i18n.__('GROUP_MEMBERS'),
+    LAST_ACTIVE: i18n.__('LAST_ACTIVE'),
+    TIMES_INVITED: i18n.__('TIMES_INVITED'),
+    LAST_INVITED: i18n.__('LAST_INVITED')
+  };
+
+  const groupData = {
+    tit: 'my group',
+    des:
+      'my group description d    llllllllllllllllll llllllllllllll llllllllllll llllllllllll ',
+    cat: 'group category',
+    ona: 'joe smith',
+    cre: '7/9/54',
+    las: '2/2/18'
+  };
+  groupData.mem = [
+    {
+      mid: 1,
+      tit: 'testTitle',
+      eml: 'test@gmail.com',
+      mcr: 'General',
+      mna: 'OwnerName',
+      las: '7/9/2018'
+    },
+    {
+      mid: 2,
+      tit: 'testTitle',
+      eml: 'test@gmail.com',
+      mcr: 'General',
+      mna: 'OwnerName',
+      las: '7/9/2018'
+    },
+    {
+      mid: 3,
+      tit: 'testTitle',
+      eml: 'test@gmail.com',
+      mcr: 'General',
+      mna: 'OwnerName',
+      las: '7/9/2018'
+    }
+  ];
+
+  groupData.inv = [
+    {
+      iid: 1,
+      eml: 'test1@gmail.com',
+      nIv: 1,
+      las: '7/9/2018'
+    },
+    {
+      iid: 2,
+      eml: 'test2@gmail.com',
+      nIv: 1,
+      las: '7/9/2018'
+    },
+    {
+      iid: 3,
+      eml: 'test3@gmail.com',
+      nIv: 2,
+      las: '7/9/2018'
+    }
+  ];
+  returnData = utils.loadHeaderText(req, res, returnData);
+  returnData = utils.loadTranslationsText(req, res, returnData);
+  returnData.csrf = res.locals._csrf;
+  returnData.groupOwner = false;
+
+  const object = {};
+  const now = moment();
+  const userId = req.param('userId');
+  if (groupId) {
+    const fields = {
+      gid: 1,
+      cat: 1,
+      tit: 1,
+      des: 1,
+      oid: 1,
+      gTyp: 1,
+      ona: 1,
+      mem: 1,
+      inv: 1,
+      cre: 1,
+      las: 1
+    };
+    if (ObjectId.isValid(groupId)) {
+      Group.findOne({ _id: ObjectId(groupId) }, fields, (error,
+        groupData) => {
+        if (error) {
+          utils.errLog(req, res, 'users.getAccountGroups.2', error, true);
+        } else {
+          // Check to see if user is part of group
+          let userFound = false;
+          if (groupData) {
+            if (req.user && groupData.mem.length) {
+              for (let i = 0; i < groupData.mem.length; i++) {
+                if (req.user._id.equals(groupData.mem[i].mid)) {
+                  userFound = true;
+                }
+              }
+              if (userFound === true) {
+                if (req.user._id.equals(groupData.oid)) {
+                  returnData.groupOwner = true;
+                }
+                returnData.groupData = {
+                  gid: groupData._id,
+                  cat: groupData.cat,
+                  tit: groupData.tit,
+                  des: groupData.des,
+                  ona: encryptor.decrypt(groupData.ona),
+                  mem: groupData.mem
+                };
+                if (returnData.groupOwner) {
+                  returnData.groupData.inv = groupData.inv;
+                }
+
+                for (let i = 0; i < groupData.mem.length; i++) {
+                  returnData.groupData.mem[i].mna = encryptor.decrypt(groupData.mem[i].mna);
+                  returnData.groupData.mem[i].eml = encryptor.decrypt(groupData.mem[i].encryptedEmail);
+                  delete returnData.groupData.mem[i].encryptedEmail;
+                  returnData.groupData.mem[i].lasActive = moment(groupData.mem[i].las).format('YYYY-MM-DD');
+                }
+                res.render('groups/editGroup', returnData);
+              } else {
+                res.send({
+                  success: false,
+                  error: 'Current User not Member of Group'
+                });
+              }
+            }
+          } else {
+            res.send({ success: false, error: 'GroupId not found' });
+          }
+        }
+      });
+    }
+  }
+};
+
 
 /**
  * GET /getCreateGroup if user has access
