@@ -10,7 +10,7 @@ const request = require('request');
 const User = require('../models/User');
 const utils = require('../lib/utils');
 
-const secretKey = '6LcEo6IZAAAAAHGqvUsCcGTE_1zTApM2vZfejgmj';
+const secretKey = '6Lez_6IZAAAAAEL1gr1pZQlDjRTQ-ZOZDURNyY8B';
 const randomBytesAsync = promisify(crypto.randomBytes);
 
 
@@ -94,9 +94,8 @@ exports.postLogin = (req, res, next) => {
     //   email: req.body.email,
     //   password: req.body.password
     // });
-    console.log('dddddeee');
     passport.authenticate('local', (err, user, info) => {
-      console.log(err, user, info);
+      console.log(err, user, info, 'ddddd');
       if (err) { return next(err); }
       if (!user) {
         req.flash('errors', info);
