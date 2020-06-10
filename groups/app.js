@@ -22,6 +22,7 @@ const multer = require('multer');
 const upload = multer({ dest: path.join(__dirname, 'uploads') });
 const i18n = require('i18n');
 
+
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
  */
@@ -138,7 +139,7 @@ app.use('/webfonts', express.static(path.join(__dirname, 'node_modules/@fortawes
  */
 app.get('/', homeController.index);
 app.get('/login', userController.getLogin);
-app.post('/login', userController.postLogin);
+app.post('/', userController.postLogin);
 app.get('/logout', userController.logout);
 app.get('/forgot', userController.getForgot);
 app.post('/forgot', userController.postForgot);

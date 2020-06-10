@@ -3,7 +3,7 @@ extends ../layout
 block content
   .pb-2.mt-2.mb-4.border-bottom
     h3 Sign in
-  form(method='POST')
+  form(id="loginForm")
     input(type='hidden', name='_csrf', value=_csrf)
     .form-group.row
       label.col-md-3.col-form-label.font-weight-bold.text-right(for='email') Email
@@ -19,9 +19,12 @@ block content
           i.far.fa-user.fa-sm
           | Login
         a.btn.btn-link(href='/forgot') Forgot your password?
+        .g-recaptcha(data-sitekey='6LcEo6IZAAAAAI1cVdG3JkO_i87OmKEy30hAilO0')
     .form-group
       .offset-md-3.col-md-7.pl-2
         hr
+  
+
     .form-group
       .offset-md-3.col-md-7.pl-2
         a.btn.btn-block.btn-google.btn-social(href='/auth/google')
@@ -48,3 +51,30 @@ block content
         a.btn.btn-block.btn-snapchat.btn-social(href='/auth/snapchat')
           i.fab.fa-snapchat-ghost.fa-sm
           | Sign in with Snapchat
+
+    script.
+      document.getElementById('loginForm').addEventListener('submit',onSubmit);
+  
+      function onSubmit(e){
+          e.preventDefault();
+          
+          const email = document.querySelector('#email').value;
+          const password = document.querySelector('#password').value;
+          const captcha = document.querySelector('#g-recaptcha-response').value;
+
+         return fetch('/', {
+           method: 'POST',
+           headers: { 'Content-type': 'application/json' },
+           body: JSON.stringify({  email:email, password:password, captcha:captcha })
+         })
+           .then(res => res.text())
+          
+           .then(data => {
+             console.log(data);
+             if(data.msg) alert(data.msg);
+              location.reload();
+           });
+          
+      
+          
+      }

@@ -5,12 +5,12 @@ const passport = require('passport');
 const _ = require('lodash');
 const validator = require('validator');
 const mailChecker = require('mailchecker');
+const i18n = require('i18n');
+const request = require('request');
 const User = require('../models/User');
-const i18n = require("i18n");
-const utils = require("../lib/utils");
+const utils = require('../lib/utils');
 
-
-
+const secretKey = '6LcEo6IZAAAAAHGqvUsCcGTE_1zTApM2vZfejgmj';
 const randomBytesAsync = promisify(crypto.randomBytes);
 
 
@@ -19,32 +19,33 @@ const randomBytesAsync = promisify(crypto.randomBytes);
  * Login page.
  */
 exports.getLogin = (req, res) => {
+  console.log(req.user);
   if (req.user) {
     return res.redirect('/');
   }
-  var returnData = {
+  let returnData = {
     layout: false,
-    title: "Login",
-    email: req.user.email,
+    title: 'Login',
+    email: req && req.user && req.user.email ? req.user.email : '',
     // recaptcha_form: nocaptcha,
-    PASSWORD: i18n.__("PASSWORD"),
-    SIGN_IN: i18n.__("SIGN_IN"),
-    ARE_YOU_A_HUMAN: i18n.__("ARE_YOU_A_HUMAN"),
-    EMAIL_OR_USERNAME: i18n.__("EMAIL_OR_USERNAME"),
-    LOGIN: i18n.__("LOGIN"),
-    FORGOT_YOUR_PASSWORD: i18n.__("FORGOT_YOUR_PASSWORD"),
-    SIGN_IN_WITH_FACEBOOK: i18n.__("SIGN_IN_WITH_FACEBOOK"),
-    SIGN_IN_WITH_TWITTER: i18n.__("SIGN_IN_WITH_TWITTER"),
-    SIGN_IN_WITH_GOOGLE: i18n.__("SIGN_IN_WITH_GOOGLE"),
-    SIGN_IN_WITH_LINKED_IN: i18n.__("SIGN_IN_WITH_LINKED_IN"),
-    SIGN_IN_WITH_INSTAGRAM: i18n.__("SIGN_IN_WITH_INSTAGRAM")
+    PASSWORD: i18n.__('PASSWORD'),
+    SIGN_IN: i18n.__('SIGN_IN'),
+    ARE_YOU_A_HUMAN: i18n.__('ARE_YOU_A_HUMAN'),
+    EMAIL_OR_USERNAME: i18n.__('EMAIL_OR_USERNAME'),
+    LOGIN: i18n.__('LOGIN'),
+    FORGOT_YOUR_PASSWORD: i18n.__('FORGOT_YOUR_PASSWORD'),
+    SIGN_IN_WITH_FACEBOOK: i18n.__('SIGN_IN_WITH_FACEBOOK'),
+    SIGN_IN_WITH_TWITTER: i18n.__('SIGN_IN_WITH_TWITTER'),
+    SIGN_IN_WITH_GOOGLE: i18n.__('SIGN_IN_WITH_GOOGLE'),
+    SIGN_IN_WITH_LINKED_IN: i18n.__('SIGN_IN_WITH_LINKED_IN'),
+    SIGN_IN_WITH_INSTAGRAM: i18n.__('SIGN_IN_WITH_INSTAGRAM')
   };
 
   returnData = utils.loadHeaderText(req, res, returnData);
   returnData = utils.loadTranslationsText(req, res, returnData);
 
-  res.render("account/login", returnData);
 
+  res.render('account/login', returnData);
 };
 
 /**
@@ -52,28 +53,63 @@ exports.getLogin = (req, res) => {
  * Sign in using email and password.
  */
 exports.postLogin = (req, res, next) => {
-  const validationErrors = [];
-  if (!validator.isEmail(req.body.email)) validationErrors.push({ msg: 'Please enter a valid email address.' });
-  if (validator.isEmpty(req.body.password)) validationErrors.push({ msg: 'Password cannot be blank.' });
+  if (!req.body.captcha) return res.json({ success: false, msg: 'Please select captcha' });
 
-  if (validationErrors.length) {
-    req.flash('errors', validationErrors);
-    return res.redirect('/login');
-  }
-  req.body.email = validator.normalizeEmail(req.body.email, { gmail_remove_dots: false });
 
-  passport.authenticate('local', (err, user, info) => {
-    if (err) { return next(err); }
-    if (!user) {
-      req.flash('errors', info);
-      return res.redirect('/login');
+  console.log(req.body.captcha);
+
+  // Verify URL
+  const query = JSON.stringify({
+    secret: secretKey,
+    response: req.body.captcha,
+    remoteip: req.connection.remoteAddress
+  });
+  const verifyURL = `https://google.com/recaptcha/api/siteverify?${query}`;
+
+  // Make a request to verifyURL
+
+  request(verifyURL, (err, response, body) => {
+    if (err) { console.log(err); }
+
+    body = JSON.parse(body);
+    console.log(body);
+    if (!body.success && body.success === undefined) {
+      return res.json({ success: false, msg: 'captcha verification failed' });
+    } if (body.score < 0.5) {
+      return res.json({ success: false, msg: 'you might be a bot, sorry!', score: body.score });
     }
-    req.logIn(user, (err) => {
+
+    const validationErrors = [];
+    if (!validator.isEmail(req.body.email)) validationErrors.push({ msg: 'Please enter a valid email address.' });
+    if (validator.isEmpty(req.body.password)) validationErrors.push({ msg: 'Password cannot be blank.' });
+
+    if (validationErrors.length) {
+      req.flash('errors', validationErrors);
+      return res.redirect('/login', {
+        post: '/', error: req.recaptcha.error, path: req.path, data: JSON.stringify(req.recaptcha.data)
+      });
+    }
+    req.body.email = validator.normalizeEmail(req.body.email, { gmail_remove_dots: false });
+    // const user = new User({
+    //   email: req.body.email,
+    //   password: req.body.password
+    // });
+    console.log('dddddeee');
+    passport.authenticate('local', (err, user, info) => {
+      console.log(err, user, info);
       if (err) { return next(err); }
-      req.flash('success', { msg: 'Success! You are logged in.' });
-      res.redirect(req.session.returnTo || '/');
-    });
-  })(req, res, next);
+      if (!user) {
+        req.flash('errors', info);
+        return res.redirect('/login');
+      }
+      req.logIn(user, (err) => {
+        if (err) { return next(err); }
+        req.flash('success', { msg: 'Success! You are logged in.' });
+        res.json({ succuess: true });
+        // res.redirect(req.session.returnTo || '/');
+      });
+    })(req, res, next);
+  });
 };
 
 /**
@@ -97,21 +133,21 @@ exports.getSignup = (req, res) => {
   if (req.user) {
     return res.redirect('/');
   }
-  var returnData = {
-    title: "Create Account",
+  let returnData = {
+    title: 'Create Account',
     // email: req.user.email,
     // recaptcha_form: nocaptcha,
-    SIGN_UP: i18n.__("SIGN_UP"),
-    FIRSTNAME: i18n.__("FIRSTNAME"),
-    LASTNAME: i18n.__("LASTNAME"),
-    SIGNUPUSERNAME: i18n.__("SIGNUPUSERNAME"),
-    EMAIL: i18n.__("EMAIL"),
-    PASSWORD: i18n.__("PASSWORD"),
-    CONFIRM_PASSWORD: i18n.__("CONFIRM_PASSWORD"),
-    SIGNUP: i18n.__("SIGNUP"),
-    ARE_YOU_A_HUMAN: i18n.__("ARE_YOU_A_HUMAN"),
-    PRIVACY_STATEMENT: i18n.__("PRIVACY_STATEMENT"),
-    REVIEW_POLICYS: i18n.__("REVIEW_POLICYS")
+    SIGN_UP: i18n.__('SIGN_UP'),
+    FIRSTNAME: i18n.__('FIRSTNAME'),
+    LASTNAME: i18n.__('LASTNAME'),
+    SIGNUPUSERNAME: i18n.__('SIGNUPUSERNAME'),
+    EMAIL: i18n.__('EMAIL'),
+    PASSWORD: i18n.__('PASSWORD'),
+    CONFIRM_PASSWORD: i18n.__('CONFIRM_PASSWORD'),
+    SIGNUP: i18n.__('SIGNUP'),
+    ARE_YOU_A_HUMAN: i18n.__('ARE_YOU_A_HUMAN'),
+    PRIVACY_STATEMENT: i18n.__('PRIVACY_STATEMENT'),
+    REVIEW_POLICYS: i18n.__('REVIEW_POLICYS')
   };
 
   returnData = utils.loadHeaderText(req, res, returnData);
@@ -164,40 +200,38 @@ exports.postSignup = (req, res, next) => {
  * Profile page.
  */
 exports.getAccount = (req, res) => {
-  var returnData = {
-    title: "Account Management",
-    PROFILE_INFORMATION: i18n.__("PROFILE_INFORMATION"),
-    EMAIL: i18n.__("EMAIL"),
-    NAME: i18n.__("NAME"),
-    GENDER: i18n.__("GENDER"),
-    MALE: i18n.__("MALE"),
-    FEMALE: i18n.__("FEMALE"),
-    OTHER: i18n.__("OTHER"),
-    LOCATION: i18n.__("LOCATION"),
-    WEBSITE: i18n.__("WEBSITE"),
-    GRAVATAR: i18n.__("GRAVATAR"),
-    UPDATE_PROFILE: i18n.__("UPDATE_PROFILE"),
-    CHANGE_PASSWORD: i18n.__("CHANGE_PASSWORD"),
-    NEW_PASSWORD: i18n.__("NEW_PASSWORD"),
-    CONFIRM_PASSWORD: i18n.__("CONFIRM_PASSWORD"),
-    CHANGE_PASSWORD: i18n.__("CHANGE_PASSWORD"),
-    DELETE_ACCOUNT: i18n.__("DELETE_ACCOUNT"),
-    YOU_CAN_DELETE_YOUR_ACCOUNT_BUT_KEEP_IN_MIND_THIS_ACTION_IS_IRREVERSIBLE: i18n.__(
-      "YOU_CAN_DELETE_YOUR_ACCOUNT_BUT_KEEP_IN_MIND_THIS_ACTION_IS_IRREVERSIBLE"
-    ),
-    DELETE_MY_ACCOUNT: i18n.__("DELETE_MY_ACCOUNT"),
-    UNLINK_YOUR_INSTAGRAM_ACCOUNT: i18n.__("UNLINK_YOUR_INSTAGRAM_ACCOUNT"),
-    LINK_YOUR_INSTAGRAM_ACCOUNT: i18n.__("LINK_YOUR_INSTAGRAM_ACCOUNT"),
-    UNLINK_YOUR_GOOGLE_ACCOUNT: i18n.__("UNLINK_YOUR_GOOGLE_ACCOUNT"),
-    LINK_YOUR_GOOGLE_ACCOUNT: i18n.__("LINK_YOUR_GOOGLE_ACCOUNT"),
-    UNLINK_YOUR_FACEBOOK_ACCOUNT: i18n.__("UNLINK_YOUR_FACEBOOK_ACCOUNT"),
-    LINK_YOUR_FACEBOOK_ACCOUNT: i18n.__("LINK_YOUR_FACEBOOK_ACCOUNT"),
-    UNLINK_YOUR_TWITTER_ACCOUNT: i18n.__("UNLINK_YOUR_TWITTER_ACCOUNT"),
-    LINK_YOUR_TWITTER_ACCOUNT: i18n.__("LINK_YOUR_TWITTER_ACCOUNT"),
-    UNLINK_YOUR_LINKED_IN_ACCOUNT: i18n.__("UNLINK_YOUR_LINKED_IN_ACCOUNT"),
-    LINK_YOUR_LINKED_IN_ACCOUNT: i18n.__("LINK_YOUR_LINKED_IN_ACCOUNT"),
-    NAME: i18n.__("NAME"),
-    GDPR_STATEMENT: i18n.__("GDPR_STATEMENT")
+  let returnData = {
+    title: 'Account Management',
+    PROFILE_INFORMATION: i18n.__('PROFILE_INFORMATION'),
+    EMAIL: i18n.__('EMAIL'),
+    NAME: i18n.__('NAME'),
+    GENDER: i18n.__('GENDER'),
+    MALE: i18n.__('MALE'),
+    FEMALE: i18n.__('FEMALE'),
+    OTHER: i18n.__('OTHER'),
+    LOCATION: i18n.__('LOCATION'),
+    WEBSITE: i18n.__('WEBSITE'),
+    GRAVATAR: i18n.__('GRAVATAR'),
+    UPDATE_PROFILE: i18n.__('UPDATE_PROFILE'),
+    CHANGE_PASSWORD: i18n.__('CHANGE_PASSWORD'),
+    NEW_PASSWORD: i18n.__('NEW_PASSWORD'),
+    CONFIRM_PASSWORD: i18n.__('CONFIRM_PASSWORD'),
+    CHANGE_PASSWORD: i18n.__('CHANGE_PASSWORD'),
+    DELETE_ACCOUNT: i18n.__('DELETE_ACCOUNT'),
+    YOU_CAN_DELETE_YOUR_ACCOUNT_BUT_KEEP_IN_MIND_THIS_ACTION_IS_IRREVERSIBLE: i18n.__('YOU_CAN_DELETE_YOUR_ACCOUNT_BUT_KEEP_IN_MIND_THIS_ACTION_IS_IRREVERSIBLE'),
+    DELETE_MY_ACCOUNT: i18n.__('DELETE_MY_ACCOUNT'),
+    UNLINK_YOUR_INSTAGRAM_ACCOUNT: i18n.__('UNLINK_YOUR_INSTAGRAM_ACCOUNT'),
+    LINK_YOUR_INSTAGRAM_ACCOUNT: i18n.__('LINK_YOUR_INSTAGRAM_ACCOUNT'),
+    UNLINK_YOUR_GOOGLE_ACCOUNT: i18n.__('UNLINK_YOUR_GOOGLE_ACCOUNT'),
+    LINK_YOUR_GOOGLE_ACCOUNT: i18n.__('LINK_YOUR_GOOGLE_ACCOUNT'),
+    UNLINK_YOUR_FACEBOOK_ACCOUNT: i18n.__('UNLINK_YOUR_FACEBOOK_ACCOUNT'),
+    LINK_YOUR_FACEBOOK_ACCOUNT: i18n.__('LINK_YOUR_FACEBOOK_ACCOUNT'),
+    UNLINK_YOUR_TWITTER_ACCOUNT: i18n.__('UNLINK_YOUR_TWITTER_ACCOUNT'),
+    LINK_YOUR_TWITTER_ACCOUNT: i18n.__('LINK_YOUR_TWITTER_ACCOUNT'),
+    UNLINK_YOUR_LINKED_IN_ACCOUNT: i18n.__('UNLINK_YOUR_LINKED_IN_ACCOUNT'),
+    LINK_YOUR_LINKED_IN_ACCOUNT: i18n.__('LINK_YOUR_LINKED_IN_ACCOUNT'),
+    NAME: i18n.__('NAME'),
+    GDPR_STATEMENT: i18n.__('GDPR_STATEMENT')
   };
 
   returnData = utils.loadHeaderText(req, res, returnData);
@@ -338,14 +372,14 @@ exports.getReset = (req, res, next) => {
         return res.redirect('/forgot');
       }
 
-      var returnData = {
-        title: "Password Reset",
+      let returnData = {
+        title: 'Password Reset',
         // recaptcha_form: nocaptcha,
-        RESET_PASSWORD: i18n.__("RESET_PASSWORD"),
-        NEW_PASSWORD: i18n.__("NEW_PASSWORD"),
-        CONFIRM_PASSWORD: i18n.__("CONFIRM_PASSWORD"),
-        ARE_YOU_A_HUMAN: i18n.__("ARE_YOU_A_HUMAN"),
-        CHANGE_PASSWORD: i18n.__("CHANGE_PASSWORD")
+        RESET_PASSWORD: i18n.__('RESET_PASSWORD'),
+        NEW_PASSWORD: i18n.__('NEW_PASSWORD'),
+        CONFIRM_PASSWORD: i18n.__('CONFIRM_PASSWORD'),
+        ARE_YOU_A_HUMAN: i18n.__('ARE_YOU_A_HUMAN'),
+        CHANGE_PASSWORD: i18n.__('CHANGE_PASSWORD')
       };
 
       returnData = utils.loadHeaderText(req, res, returnData);
@@ -571,16 +605,14 @@ exports.getForgot = (req, res) => {
     return res.redirect('/');
   }
 
-  var returnData = {
-    title: "Forgot Password",
+  let returnData = {
+    title: 'Forgot Password',
     // recaptcha_form: nocaptcha,
-    FORGOT_PASSWORD: i18n.__("FORGOT_PASSWORD"),
-    ENTER_YOUR_EMAIL_ADDRESS_BELOW_AND_WE_WILL_SEND_YOU_PASSWORD_RESET_INSTRUCTIONS: i18n.__(
-      "ENTER_YOUR_EMAIL_ADDRESS_BELOW_AND_WE_WILL_SEND_YOU_PASSWORD_RESET_INSTRUCTIONS"
-    ),
-    EMAIL: i18n.__("EMAIL"),
-    ARE_YOU_A_HUMAN: i18n.__("ARE_YOU_A_HUMAN"),
-    RESET_PASSWORD: i18n.__("RESET_PASSWORD")
+    FORGOT_PASSWORD: i18n.__('FORGOT_PASSWORD'),
+    ENTER_YOUR_EMAIL_ADDRESS_BELOW_AND_WE_WILL_SEND_YOU_PASSWORD_RESET_INSTRUCTIONS: i18n.__('ENTER_YOUR_EMAIL_ADDRESS_BELOW_AND_WE_WILL_SEND_YOU_PASSWORD_RESET_INSTRUCTIONS'),
+    EMAIL: i18n.__('EMAIL'),
+    ARE_YOU_A_HUMAN: i18n.__('ARE_YOU_A_HUMAN'),
+    RESET_PASSWORD: i18n.__('RESET_PASSWORD')
   };
 
   returnData = utils.loadHeaderText(req, res, returnData);
@@ -669,7 +701,7 @@ exports.postForgot = (req, res, next) => {
 
   createRandomToken
     .then(setRandomToken)
-    .then(sendForgotPasswordEmail)
+    // .then(sendForgotPasswordEmail)
     .then(() => res.redirect('/forgot'))
     .catch(next);
 };
