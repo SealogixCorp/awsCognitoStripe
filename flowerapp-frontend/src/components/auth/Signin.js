@@ -10,6 +10,7 @@ import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
+import ReCAPTCHA from "react-google-recaptcha";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import NavBar from "../Appbar";
@@ -39,6 +40,7 @@ export default () => {
   const history = useHistory();
   const classes = useStyles();
   const [forgotPassword, setForgotPassword] = useState(false);
+  const [varifyHuman, setVarifyHuman] = useState(false);
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
 
@@ -52,9 +54,30 @@ export default () => {
     event.preventDefault();
     try {
       if (!username || !password) {
+        addToast(
+          "Enter username and password",
+          {
+            appearance: "error",
+            autoDismiss: true,
+            PlacementType: "top-right",
+            autoDismissTimeout: 6000
+          })
         console.log("Enter username and password", "error");
         return;
       }
+      if(!varifyHuman){
+        addToast(
+          "Please varify that you are human",
+          {
+            appearance: "error",
+            autoDismiss: true,
+            PlacementType: "top-right",
+            autoDismissTimeout: 6000
+          })
+
+        return;
+      }
+
       const user = await Auth.signIn(username, password);
       console.log(user);
       console.log(`Welcome ${user.username}`);
@@ -71,9 +94,7 @@ export default () => {
       console.log(err);
     }
   };
-  const handleForgotPassword = () => {
-    setForgotPassword(!forgotPassword);
-  };
+
   const handleForgotSubmit = async event => {
     event.preventDefault();
     try {
@@ -106,6 +127,13 @@ export default () => {
       console.log(err.message, "error");
       console.log(err);
     }
+  };
+  const varifyHumanCallback = (token)=>{
+    console.log(token);
+    if(token) setVarifyHuman(true);
+  }
+  const handleForgotPassword = () => {
+    setForgotPassword(!forgotPassword);
   };
   return (
     <React.Fragment>
@@ -207,6 +235,10 @@ export default () => {
                 >
                   Sign In
                 </Button>
+                <ReCAPTCHA
+        sitekey="6Lez_6IZAAAAAHBg2EcyW9fKy-CJJoFg0XKFjV1x"
+        onChange={varifyHumanCallback}
+      />
 
                 <Grid container>
                   <Grid item xs>

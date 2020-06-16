@@ -8,6 +8,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
+import ReCAPTCHA from "react-google-recaptcha";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
@@ -43,6 +44,7 @@ export default () => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
+  const [varifyHuman, setVarifyHuman] = useState(false);
   const [locale, setLocale] = useState("");
 
   /**
@@ -55,7 +57,27 @@ export default () => {
     event.preventDefault();
     try {
       if (!username || !email || !password) {
-        console.log("Please filled the signup form", "error");
+
+        addToast(
+          "Please fill the signup form",
+          {
+            appearance: "error",
+            autoDismiss: true,
+            PlacementType: "top-right",
+            autoDismissTimeout: 6000
+          })
+        return;
+      }
+      if(!varifyHuman){
+        addToast(
+          "Please varify that you are human",
+          {
+            appearance: "error",
+            autoDismiss: true,
+            PlacementType: "top-right",
+            autoDismissTimeout: 6000
+          })
+
         return;
       }
       const signUpResponse = await Auth.signUp({
@@ -94,6 +116,10 @@ export default () => {
   const handleChange = event => {
     setLocale(event.target.value);
   };
+  const varifyHumanCallback = (token)=>{
+    console.log(token);
+    if(token) setVarifyHuman(true);
+  }
 
   return (
     <React.Fragment>
@@ -196,6 +222,10 @@ export default () => {
             >
               Sign Up
             </Button>
+            <ReCAPTCHA
+    sitekey="6Lez_6IZAAAAAHBg2EcyW9fKy-CJJoFg0XKFjV1x"
+    onChange={varifyHumanCallback}
+  />
             <Grid container justify="flex-end">
               <Grid item>
                 <Link href="#" variant="body2">
