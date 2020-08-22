@@ -15,6 +15,7 @@ import Image from "material-ui-image";
 import axios from "axios";
 import NavBar from "./Appbar";
 import Footer from "./Footer";
+import { Auth } from "aws-amplify";
 import { monthlyDeal, arrangementDeals } from "../core/products";
 
 function Copyright() {
@@ -97,6 +98,27 @@ export default () => {
     } else {
       console.log("Something went wrong");
     }
+  }
+  async function createGroup() {
+    console.log("test");
+    const user = await Auth.currentAuthenticatedUser();
+    console.log(user.signInUserSession.idToken.jwtToken);
+    const response = await  axios.post("https://cors-anywhere.herokuapp.com/https://api.myflowerarchitect.com/group/create", {
+  tit:"titlefff",
+  des:"descripiton of the group33",
+  web:"www.google.com33",
+  cat:"cat of the group33"
+}, {
+  headers: {
+    'Authorization': `Bearer ${user.signInUserSession.idToken.jwtToken}`,
+    "Accept": "application/json",
+   "Content-Type": "application/json",
+   'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': '*'
+  }
+})
+  console.log(response);
+
   }
   const renderItem = deal => (
     <Grid
@@ -205,6 +227,17 @@ export default () => {
           </Grid>
         </Grid>
         <Container maxWidth="md" component="main">
+        <Button
+          component="div"
+          fullWidth
+
+          color="primary"
+          onClick={() => {
+            createGroup()
+          }}
+        >
+        create group
+          </Button>
           <Grid container spacing={5} alignItems="flex-end"></Grid>
         </Container>
         {/* Footer */}

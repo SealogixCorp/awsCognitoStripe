@@ -45,7 +45,7 @@ export default () => {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [varifyHuman, setVarifyHuman] = useState(false);
-  const [locale, setLocale] = useState("");
+  const [locale, setLocale] = useState("en");
 
   /**
    *
