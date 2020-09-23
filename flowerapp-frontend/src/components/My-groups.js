@@ -1,9 +1,11 @@
 import React,{useEffect} from "react";
+import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import {
   Link
 } from "react-router-dom";
+import Button from '@material-ui/core/Button';
 import Typography from "@material-ui/core/Typography";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -94,6 +96,7 @@ const useStyles = makeStyles(theme => ({
 
 export default ()=> {
   const classes = useStyles();
+  const history = useHistory();
  const [page, setPage] = React.useState(0);
  const [groups, setGroups] = React.useState(null);
  const [loading, setLoading] = React.useState(true);
@@ -127,26 +130,69 @@ export default ()=> {
  }, []);
 
  const handleChangeRowsPerPage = (event) => {
-   setRowsPerPage(+event.target.value);
+   setRowsPerPage(event.target.value);
    setPage(0);
  };
  if(loading){
    return(
    <div>Loading...</div>)
  };
-const renderCell = (column, value,id )=>{
+ const onDelete = async(e)=>{
+   try {
+
+
+    const groupId = e.currentTarget.dataset.id;
+    console.log(groupId);
+    const user = await Auth.currentAuthenticatedUser();
+    console.log(user.signInUserSession.idToken.jwtToken);
+    const response = await axios.post(
+      `https://api.myflowerarchitect.com/group/delete/${groupId}`,{  }, {
+        headers: {
+          Authorization: `Bearer ${user.signInUserSession.idToken.jwtToken}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "*"
+        }
+      }
+    );
+     console.log(response);
+   } catch (e) {
+     console.log(e);
+   }
+ }
+const renderCell = (column, value,row )=>{
   console.log(column, value);
   if(column.id === "action"){
+    console.log(column, value,row )
     return(
       <TableCell key={column.id} align={column.align}>
-         <Link to={`group/edit/${id}`}>{value}</Link>
+      <Button
+        onClick={()=>{
+          console.log(row._id);
+        history.push(`group/edit/${row._id}`)
+        }}
+        color="primary"
+        className={classes.submit}
+      >
+Edit
+      </Button>
+
+         <Button
+         data-id={row._id}
+           onClick={onDelete}
+           color="primary"
+           className={classes.submit}
+         >
+  Delete
+         </Button>
       </TableCell>
     )
   }
   else if(column.id === "tit"){
     return(
     <TableCell key={column.id} align={column.align}>
-       <Link to={`group/edit/${id}`}>{value}</Link>
+       <Link to={`group/${row._id}`}>{value}</Link>
     </TableCell>
   )
   }
@@ -187,7 +233,7 @@ const renderCell = (column, value,id )=>{
                    const value = row[column.id];
                    return (
                      <>
-                    {renderCell(column,value,row._id)}
+                    {renderCell(column,value,row)}
                     </>
                    );
                  })}

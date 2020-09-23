@@ -103,7 +103,7 @@ export default () => {
     console.log("test");
     const user = await Auth.currentAuthenticatedUser();
     console.log(user.signInUserSession.idToken.jwtToken);
-    const response = await  axios.post("https://cors-anywhere.herokuapp.com/https://api.myflowerarchitect.com/group/create", {
+    const response = await  axios.post("https://api.myflowerarchitect.com/group/create", {
   tit:"titlefff",
   des:"descripiton of the group33",
   web:"www.google.com33",

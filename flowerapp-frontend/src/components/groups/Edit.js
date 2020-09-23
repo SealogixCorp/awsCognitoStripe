@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Auth } from "aws-amplify";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -9,7 +9,6 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
@@ -56,6 +55,7 @@ const useStyles = makeStyles(theme => ({
 
 export default () => {
   let { id } = useParams();
+  console.log(id,"dd");
   const validate = values => {
     const errors = {};
     if (!values.tit) {
@@ -83,34 +83,7 @@ export default () => {
   const [loading, setLoading] = React.useState(true);
   const classes = useStyles();
 
-  const getMyGroup = async () => {
-    try {
-      const user = await Auth.currentAuthenticatedUser();
-      const response = await axios.get(
-        `https://cors-anywhere.herokuapp.com/https://api.myflowerarchitect.com/group/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${user.signInUserSession.idToken.jwtToken}`,
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "*"
-          }
-        }
-      );
-      console.log(response.data);
 
-      formik.setFieldValue("tit", response.data.tit, true);
-      formik.setFieldValue("des", response.data.des, true);
-      formik.setFieldValue("cat", response.data.cat, true);
-      formik.setFieldValue("web", response.data.web, true);
-      setGroup(response.data);
-      console.log(formik.values);
-      setLoading(false);
-    } catch (e) {
-      console.log(e);
-    }
-  };
   const formik = useFormik({
     initialValues: {
       tit: group ? group.tit : "",
@@ -122,11 +95,14 @@ export default () => {
     onSubmit: async values => {
       try {
         const user = await Auth.currentAuthenticatedUser();
-        console.log(user.signInUserSession.idToken.jwtToken);
+        //console.log(user.signInUserSession.idToken.jwtToken);
         console.log(values);
         const response = await axios.post(
-          `https://cors-anywhere.herokuapp.com/https://api.myflowerarchitect.com/group/update/group/${id}`,
-          { ...values },
+          `https://api.myflowerarchitect.com/group/update/group/${id}`,
+          {
+            ...values,
+            groupId: id
+          },
           {
             headers: {
               Authorization: `Bearer ${user.signInUserSession.idToken.jwtToken}`,
@@ -137,9 +113,9 @@ export default () => {
             }
           }
         );
-        console.log(response);
-        console.log("Group created Successful!");
-        addToast("You have successfully created . \n", {
+console.log(response);
+        console.log("Group updated Successful!");
+        addToast("You have successfully updated . \n", {
           appearance: "success",
           autoDismiss: true,
           PlacementType: "top-right",
@@ -152,12 +128,44 @@ export default () => {
     }
   });
   useEffect(() => {
+    const getMyGroup = async () => {
+      console.log(id);
+      try {
+        const user = await Auth.currentAuthenticatedUser();
+        const response = await axios.get(
+          `https://api.myflowerarchitect.com/group/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${user.signInUserSession.idToken.jwtToken}`,
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Methods": "*"
+            }
+          }
+        );
+        console.log(response.data.data, response.data);
+        console.log(response.data.tit)
+        let data1 = response.data["statusCode: 200, success: true, count: 1, data"]
+        formik.setFieldValue("tit", data1.tit, true);
+         formik.setFieldValue("des", data1.des, true);
+         formik.setFieldValue("cat", data1.cat, true);
+         formik.setFieldValue("web", data1.web, true);
+
+        //setGroup({tit:response.data["statusCode: 200, success: true, count: 1, data"].tit,des:response.data["statusCode: 200, success: true, count: 1, data"].des,web:response.data["statusCode: 200, success: true, count: 1, data"].web, cat:response.data["statusCode: 200, success: true, count: 1, data"].cat})
+        setLoading(false);
+      } catch (e) {
+        console.log(e);
+      }
+    };
     getMyGroup();
-  }, [getMyGroup]);
+  },[]);
 
   if (loading) {
     return <div>loading....</div>;
   }
+
+
 
   return (
     <React.Fragment>
@@ -171,7 +179,7 @@ export default () => {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Create Group
+              Update Group
             </Typography>
             <form
               className={classes.form}
@@ -243,7 +251,7 @@ export default () => {
                 color="primary"
                 className={classes.submit}
               >
-                Create Group
+                Update Group
               </Button>
             </form>
           </div>

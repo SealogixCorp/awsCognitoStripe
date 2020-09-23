@@ -57,30 +57,25 @@ export default () => {
     event.preventDefault();
     try {
       if (!username || !email || !password) {
-
-        addToast(
-          "Please fill the signup form",
-          {
-            appearance: "error",
-            autoDismiss: true,
-            PlacementType: "top-right",
-            autoDismissTimeout: 6000
-          })
+        addToast("Please fill the signup form", {
+          appearance: "error",
+          autoDismiss: true,
+          PlacementType: "top-right",
+          autoDismissTimeout: 6000
+        });
         return;
       }
-      if(!varifyHuman){
-        addToast(
-          "Please varify that you are human",
-          {
-            appearance: "error",
-            autoDismiss: true,
-            PlacementType: "top-right",
-            autoDismissTimeout: 6000
-          })
+      if (!varifyHuman) {
+        addToast("Please varify that you are human", {
+          appearance: "error",
+          autoDismiss: true,
+          PlacementType: "top-right",
+          autoDismissTimeout: 6000
+        });
 
         return;
       }
-      const signUpResponse = await Auth.signUp({
+      await Auth.signUp({
         username,
         password,
         attributes: {
@@ -116,10 +111,10 @@ export default () => {
   const handleChange = event => {
     setLocale(event.target.value);
   };
-  const varifyHumanCallback = (token)=>{
+  const varifyHumanCallback = token => {
     console.log(token);
-    if(token) setVarifyHuman(true);
-  }
+    if (token) setVarifyHuman(true);
+  };
 
   return (
     <React.Fragment>
@@ -223,9 +218,9 @@ export default () => {
               Sign Up
             </Button>
             <ReCAPTCHA
-    sitekey="6Lez_6IZAAAAAHBg2EcyW9fKy-CJJoFg0XKFjV1x"
-    onChange={varifyHumanCallback}
-  />
+              sitekey="6Lez_6IZAAAAAHBg2EcyW9fKy-CJJoFg0XKFjV1x"
+              onChange={varifyHumanCallback}
+            />
             <Grid container justify="flex-end">
               <Grid item>
                 <Link href="#" variant="body2">
