@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "^4.9.13",
+    "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -11,6 +11,8 @@
     "aws-amplify": "^3.0.10",
     "aws-amplify-react": "^4.1.9",
     "axios": "^0.19.2",
+    "formik": "^2.1.5",
+    "material-table": "^1.68.0",
     "material-ui-image": "^3.2.3",
     "query-string": "^6.12.1",
     "react": "^16.13.1",
@@ -44,5 +46,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "babel-loader": "^8.1.0"
   }
 }

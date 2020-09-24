@@ -2,6 +2,7 @@ require("dotenv").config();
 const cors = require("cors");
 const express = require("express");
 const request = require('request');
+const axios  = require('axios');
 const bodyParser = require('body-parser');
 const stripe = require("stripe")(process.env.STRIPE_KEY);
 const uuid = require("uuid/v4");
@@ -20,6 +21,52 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
 //routes
+
+app.get("/req",(req,res)=>{
+let body = {
+tit:"Test group by Rashid1",
+des:"Test group by rashid from server code1",
+web:"www.google.com1",
+cat:"cat of the group23"
+};
+JSON.strig
+axios.post("https://api.myflowerarchitect.com/group/create", {
+tit:"Test group bys",
+des:"Test group by rashid from server",
+web:"www.google.com1",
+cat:"cat of the group23"
+}, {
+headers: {
+  'Authorization': `Bearer eyJraWQiOiJcL2dUdnFVXC9WXC9ncE5FeUVtVzhBc1NteWtEbTZDeFpjRlZ3NWZpTkF3V3RVPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIxMjYyOGIzYy03MTgxLTQ0ZGMtOWQ2Ni1jYmY0NGM0ZGI3ODQiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLXdlc3QtMi5hbWF6b25hd3MuY29tXC91cy13ZXN0LTJfZjVqS00wdHdIIiwiY29nbml0bzp1c2VybmFtZSI6ImRlY2VudDEwY3MiLCJsb2NhbGUiOiJlbiIsImF1ZCI6IjRiYTBwMG5yNGduaTQxdWJxdDM2aTA1Z2RlIiwiZXZlbnRfaWQiOiJhMzYwZmEzMC05MGRmLTQ4YjUtODA1YS03YzQyZGJjNjE3OGMiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTU5NjkxMzA3MywibmFtZSI6IlJhc2hpZCBBaG1hZCIsImV4cCI6MTU5NjkxNjY3MywiaWF0IjoxNTk2OTEzMDczLCJlbWFpbCI6ImRlY2VudDEwY3NAZ21haWwuY29tIn0.ETVavLxERRlKCtk6g6Kryh7EWmDT2EEjle3wjFSDIq7bWOI4_wSA4F2zUg10puo0WHD3qqXH72pOWt5_k6ZinFyo_R7KjnyOZHL2TUzhv0scbAY4yzgMb_6Ivij3Zuqi9Gch3XuU3JYHyWaJNopgawMpVZMirHz__2Hp6KA53CGmRHeSmKlv6YyR1vA8YNmURb2yuE-2QxpUeZJVoUkjXha2eXrhh6U674V7Rxp5vToO48B94Y4G38NY72jQd6Sn4Ygq33T7FzCgxwJr3V4WSR3X05oKXlSsd0FLqJOnDuea0QicjG-JuAPAsfuirAdP3MMRBXAeBwZPdEbArpfA2Q`,
+  "Accept": "application/json",
+ "Content-Type": "application/json",
+ 'Access-Control-Allow-Origin': '*'
+}
+}).then((response) => {
+  console.log(response.data);
+  res.json(response.data.data)
+
+}).catch((err) => {
+  res.json(err.message);
+})
+})
+app.get("/group",(req,res)=>{
+console.log("ddd")
+axios.get("https://api.myflowerarchitect.com/group/mygroups", {
+headers: {
+  'Authorization': `Bearer eyJraWQiOiJcL2dUdnFVXC9WXC9ncE5FeUVtVzhBc1NteWtEbTZDeFpjRlZ3NWZpTkF3V3RVPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIxMjYyOGIzYy03MTgxLTQ0ZGMtOWQ2Ni1jYmY0NGM0ZGI3ODQiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLXdlc3QtMi5hbWF6b25hd3MuY29tXC91cy13ZXN0LTJfZjVqS00wdHdIIiwiY29nbml0bzp1c2VybmFtZSI6ImRlY2VudDEwY3MiLCJsb2NhbGUiOiJlbiIsImN1c3RvbTp1c2VySWQiOiJVVVVVVVUxMjM0NTY3ODkxMjM0NTY5MjkiLCJhdWQiOiI0YmEwcDBucjRnbmk0MXVicXQzNmkwNWdkZSIsImV2ZW50X2lkIjoiYTM2MGZhMzAtOTBkZi00OGI1LTgwNWEtN2M0MmRiYzYxNzhjIiwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE1OTY5MTMwNzMsIm5hbWUiOiJSYXNoaWQgQWhtYWQiLCJleHAiOjE1OTc0MjU5NjcsImN1c3RvbTpyb2xlIjoiZnJlZSIsImlhdCI6MTU5NzQyMjM2NywiZW1haWwiOiJkZWNlbnQxMGNzQGdtYWlsLmNvbSJ9.N2UBMkDP2aPzPSUEuRYncyDIs8F9mNh-RlUU13hdgr2WDEfWy3z_PZ-n38UV5--V3YDnil-Yz0zDfAKBmV4K1m0dV36P_eyw_J3d0ps4EtX2Svx7pnuAwAeNLPZZAnKEcoChWShU8HAhklI5ke2c0GDc2Ie2l0I0T2upDwCJVm-6geMyTMQM5wwl38QigNX_Y6bi8grqoOMYrXto_bfbZlbBtnjJqJJYo1qyVVL85KYrDcCLTjp9rEdTipx6bOBehSXSLargadMAtTIRBTm7njF6XQuxCMu8eho0GlgBXqGiEB_2gB7wyB9heXOCRQTs4reJ2VxQlOApMscEMcYt`,
+  "Accept": "application/json",
+ "Content-Type": "application/json",
+ 'Access-Control-Allow-Origin': '*'
+}
+}).then((response) => {
+  console.log(response);
+  res.json(response.data)
+
+}).catch((err) => {
+  res.json(err.message);
+})
+})
 app.get("/", (req, res) => {
   res.send("Ok");
 });

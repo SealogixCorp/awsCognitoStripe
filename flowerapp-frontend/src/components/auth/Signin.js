@@ -79,6 +79,7 @@ export default () => {
       }
 
       const user = await Auth.signIn(username, password);
+      localStorage.setItem("JWT_TOKEN_KEY",`${user.keyPrefix}.${user.username}.idToken`);
       console.log(user);
       console.log(`Welcome ${user.username}`);
       history.push("/");
