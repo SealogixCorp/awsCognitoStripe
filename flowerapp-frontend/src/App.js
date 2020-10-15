@@ -1,5 +1,5 @@
-import React from 'react';
-
+import React, {useEffect} from 'react';
+import { Auth } from "aws-amplify";
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Home from './components/Home';
 import Signup from './components/auth/Signup';
@@ -16,6 +16,14 @@ import './App.css';
 
 const App = () => {
 	console.log(localStorage.getItem(localStorage.getItem("JWT_TOKEN_KEY")),"dddddd");
+
+	useEffect(() => {
+	 const timer = setInterval(async() => {
+		   const user = await Auth.currentAuthenticatedUser();
+		 localStorage.setItem("JWT_TOKEN_KEY",`${user.keyPrefix}.${user.username}.idToken`);
+	 }, 1800000);
+	 return () => clearInterval(timer);
+ }, []);
 	return (
 		<React.Fragment>
 			<BrowserRouter>
