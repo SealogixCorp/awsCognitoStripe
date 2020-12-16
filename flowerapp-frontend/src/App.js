@@ -22,7 +22,7 @@ const App = () => {
         "JWT_TOKEN_KEY",
         `${user.keyPrefix}.${user.username}.idToken`
       );
-    }, 600000);
+    }, 3300000);
     return () => clearInterval(timer);
   }, []);
   return (
