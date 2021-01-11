@@ -121,6 +121,17 @@ export default () => {
               >
                 MY GROUPS
               </Link>
+              <Link
+                onClick={() => {
+                  history.push("/group/create");
+                }}
+                variant="button"
+                color="textPrimary"
+                className={classes.link}
+              >
+              CREATE GROUP
+               
+              </Link>
               <Button
                 aria-controls="simple-menu"
                 aria-haspopup="true"
