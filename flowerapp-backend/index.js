@@ -193,6 +193,62 @@ app.post("/checkout", async (req, res) => {
 
   res.json({ error, status });
 });
+app.post('/create-subscription', async (req, res) => {
+  let customer;
+  
+  try {
+    // check the customerId if not exsist create customer
+    if(!req.body.customerId)
+{
+  customer  = await stripe.customers.create({
+      email: req.body.email,
+    });
+}
+// Attach the payment method to the customer
+   await stripe.paymentMethods.attach(req.body.paymentMethodId, {
+      customer: req.body.customerId || customer.id,
+    });
+  } catch (error) {
+    return res.status('402').send({ error: { message: error.message } });
+  }
+
+  // Change the default invoice settings on the customer to the new payment method
+  await stripe.customers.update(
+    req.body.customerId || customer.id,
+    {
+      invoice_settings: {
+        default_payment_method: req.body.paymentMethodId,
+      },
+    }
+  );
+
+  // Create the subscription
+let subscription;
+  if(req.body.paymentType === "recurring"){
+  subscription = await stripe.subscriptions.create({
+    customer: req.body.customerId || customer.id,
+    items: [{ price: req.body.priceId }],
+    expand: ['latest_invoice.payment_intent'],
+  });
+  }
+  else{
+      // One time payment
+  subscription = await stripe.paymentIntents.create({
+    customer: req.body.customerId || customer.id,
+    currency: 'usd',
+    amount: parseInt(req.body.price * 100),
+    payment_method: req.body.paymentMethodId,
+
+  });
+  // Confirm the payment
+  await stripe.paymentIntents.confirm(
+  subscription.id,
+
+);
+  }
+// Return success to the client
+  res.send(subscription);
+});
 
 //listen
 
