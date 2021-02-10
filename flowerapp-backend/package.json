@@ -16,7 +16,7 @@
     "nodemon": "^2.0.3",
     "recaptcha-verify": "^0.1.1",
     "request": "^2.88.2",
-    "stripe": "^8.44.0",
+    "stripe": "^8.131.1",
     "uuid": "^7.0.3"
   }
 }

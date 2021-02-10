@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import StripeCheckout from "react-stripe-checkout";
 import Button from "@material-ui/core/Button";
+import {  useHistory } from 'react-router-dom';
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
@@ -16,7 +17,11 @@ import axios from "axios";
 import NavBar from "./Appbar";
 import Footer from "./Footer";
 import { Auth } from "aws-amplify";
+//import {stripePromise} from "../core/stripe"
 import { monthlyDeal, arrangementDeals } from "../core/products";
+import CardForm from "../components/Card";
+
+
 
 function Copyright() {
   return (
@@ -78,6 +83,7 @@ const useStyles = makeStyles(theme => ({
 
 export default () => {
   const classes = useStyles();
+  const history = useHistory();
   const [product, setProduct] = useState({
     name: "Flower bouquet",
     image:
@@ -129,6 +135,7 @@ export default () => {
       md={12}
       style={{ marginBottom: "1em" }}
     >
+
       <Card>
         <CardHeader
           title={deal.title}
@@ -161,30 +168,17 @@ export default () => {
           </ul>
         </CardContent>
         <CardActions>
-          <StripeCheckout
-            ComponentClass="div"
-            shippingAddress
-            billingAddress
-            name={deal.name}
-            description={deal.descripton} // the pop-in header subtitle
-            image={product.image}
-            token={makePayment}
-            amount={deal.price * 100} // cents
-            currency="USD"
-            stripeKey="pk_test_P9SL6JXjtpSUTyNCUFTmWSpD"
-          >
-            <Button
-              component="div"
+           <Button
+              onClick={()=>{
+history.push(`/checkout/${deal.id}`)
+              }}
               fullWidth
               variant={deal.buttonVariant}
               color="primary"
-              onClick={() => {
-                setProduct(product);
-              }}
+              
             >
               {deal.buttonText} {deal.price} $
             </Button>
-          </StripeCheckout>
         </CardActions>
       </Card>
     </Grid>

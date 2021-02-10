@@ -117,9 +117,9 @@ export default ()=> {
      'Access-Control-Allow-Methods': '*'
    }
  });
- console.log(response);
+ console.log(response,response.data);
 
- setGroups(response.data.data);
+ setGroups(response.data);
  setLoading(false);
    } catch (e) {
      console.log(e);
