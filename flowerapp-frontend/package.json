@@ -7,15 +7,19 @@
     "@material-ui/icons": "^4.9.1",
     "@stripe/react-stripe-js": "^1.2.0",
     "@stripe/stripe-js": "^1.11.0",
+    "@tailwindcss/postcss7-compat": "^2.0.2",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "autoprefixer": "^9",
     "aws-amplify": "^3.0.10",
     "aws-amplify-react": "^4.1.9",
     "axios": "^0.19.2",
     "formik": "^2.1.5",
     "material-table": "^1.68.0",
     "material-ui-image": "^3.2.3",
+    "postcss": "^7",
+    "postcss-cli": "^8.3.1",
     "query-string": "^6.12.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -29,10 +33,11 @@
     "uuid": "^7.0.3"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "set INLINE_RUNTIME_CHUNK=false && react-scripts build",
+    "start": "yarn build:style && react-scripts start",
+    "build": "set INLINE_RUNTIME_CHUNK=false &&  build:style && react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "build:style": "tailwind build src/styles/index.css -o src/styles/tailwind.css"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -50,6 +55,6 @@
     ]
   },
   "devDependencies": {
-   
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat"
   }
 }

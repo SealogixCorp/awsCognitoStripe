@@ -2,43 +2,13 @@ import React, { useState } from "react";
 import { Auth } from "aws-amplify";
 import { useToasts } from "react-toast-notifications";
 import { useHistory } from "react-router-dom";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
-import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Typography from "@material-ui/core/Typography";
 import ReCAPTCHA from "react-google-recaptcha";
-import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
-import NavBar from "../Appbar";
 
-const useStyles = makeStyles(theme => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center"
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(3)
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2)
-  }
-}));
+import NavBar from "../Navbar";
 
 export default () => {
   const { addToast } = useToasts();
   const history = useHistory();
-  const classes = useStyles();
   const [forgotPassword, setForgotPassword] = useState(false);
   const [varifyHuman, setVarifyHuman] = useState(false);
   const [password, setPassword] = useState("");
@@ -138,131 +108,118 @@ export default () => {
   };
   return (
     <React.Fragment>
-      <NavBar />
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-
+      <NavBar backgroundColor="bg-gray-100" />
+      <div className="container mx-auto flex justify-center">
+        <div className="rounded-md shadow-lg bg-gray-100 border my-6 p-4 border-gray-100 flex flex-col w-1/3 items-center justify-center">
+          
+        <div className="w-20 h-20 rounded-full bg-pink-600 flex  justify-center items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+</svg>
+        </div>
           {forgotPassword ? (
             <>
-              <Typography component="h1" variant="h5">
+               <h1 className="text-gray-600 text-2xl text-center mx-3">
                 Forgot Password
-              </Typography>
-              <form className={classes.form} noValidate>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <TextField
-                      variant="outlined"
-                      required
-                      fullWidth
-                      placeHolder="Enter username"
-                      id="username"
-                      label="Username"
-                      name="username"
-                      autoComplete="username"
-                      value={username}
-                      onChange={event => setUsername(event.target.value)}
-                    />
-                  </Grid>
-                </Grid>
-                <Button
+              </h1>
+              <form className="w-full"  noValidate>
+              <div className="flex flex-col my-2 space-y-2">
+              <label className="text-gray-600 font-semibold block">User Name</label>
+              <input
+              className="rounded p-2 border"
+                required
+                placeHolder="Enter username"
+                id="username"
+                label="Username"
+                name="username"
+                autoComplete="username"
+                value={username}
+                onChange={event => setUsername(event.target.value)}
+              />
+              </div>
+                <button
                   onClick={handleForgotSubmit}
                   type="submit"
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                  className={classes.submit}
+                  className="bg-blue-700 my-2 p-4 font-semibold block text-center w-full rounded text-white"
                 >
                   Send Code
-                </Button>
-                <Grid container justify="flex-end">
-                  <Grid item>
-                    <Link
-                      href="#"
-                      variant="body2"
+                </button>
+                <div className="flex justify-end">
+                    <button
+                      className="bg-transparent text-blue-400 m-1 "
                       onClick={handleForgotPassword}
                     >
                       Back to login form?
-                    </Link>
-                  </Grid>
-                </Grid>
+                    </button>
+                  </div>
+           
               </form>
             </>
           ) : (
             <>
-              <Typography component="h1" variant="h5">
-                Sign in
-              </Typography>
-              <form className={classes.form} noValidate>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <TextField
-                      variant="outlined"
-                      required
-                      fullWidth
-                      id="username"
-                      label="Email/ Username"
-                      name="username"
-                      autoComplete="username"
-                      value={username}
-                      onChange={event => setUsername(event.target.value)}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      variant="outlined"
-                      required
-                      fullWidth
-                      name="password"
-                      label="Password"
+              <h1 className="text-gray-600 text-2xl text-center mx-3">
+                Sign In
+              </h1>
+              <form className="w-full"   noValidate>
+              <div className="flex flex-col my-2 space-y-2">
+              <label className="text-gray-600 font-semibold block">Email/ Username</label>
+              <input
+              className="rounded p-4 shadow-inner border"
+                required
+                placeHolder="Enter username"
+                id="username"
+                label="Username"
+                name="username"
+                autoComplete="username"
+                value={username}
+                onChange={event => setUsername(event.target.value)}
+              />
+              </div>
+
+                <div className="flex flex-col my-2 space-y-2">
+              <label className="text-gray-600 font-semibold block">Password</label>
+              <input
+              className="rounded p-4 shadow-inner border"
+                required
+                 name="password"
                       type="password"
                       id="password"
                       autoComplete="current-password"
                       value={password}
                       onChange={event => setPassword(event.target.value)}
-                    />
-                  </Grid>
-                </Grid>
-                <Button
+              />
+              </div>
+                <button
                   onClick={handleSubmit}
                   type="submit"
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                  className={classes.submit}
+
+                  className="bg-blue-700 my-2 p-4 font-semibold block text-center w-full rounded text-white"
                 >
                   Sign In
-                </Button>
+                </button>
                 <ReCAPTCHA
+                className="w-full"
         sitekey="6Lez_6IZAAAAAHBg2EcyW9fKy-CJJoFg0XKFjV1x"
         onChange={varifyHumanCallback}
       />
 
-                <Grid container>
-                  <Grid item xs>
-                    <Link variant="Button" onClick={handleForgotPassword}>
+                <div className="flex justify-between ">
+                
+                    <button className="bg-transparent text-blue-400 m-1 " onClick={handleForgotPassword}>
                       Forgot password?
-                    </Link>
-                  </Grid>
-                  <Grid item>
-                    <Link
-                      variant="Button"
+                    </button>
+                    <button className="bg-transparent text-blue-400 m-1 "
                       onClick={() => {
                         history.push("signup");
                       }}
-                    >
-                      {"Don't have an account? Sign Up"}
-                    </Link>
-                  </Grid>
-                </Grid>
+                    >{"Don't have an account? Sign Up"}
+                    </button>
+                </div>
               </form>
             </>
           )}
         </div>
-      </Container>
+      </div>
     </React.Fragment>
   );
 };

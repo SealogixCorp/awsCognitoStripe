@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import {loadStripe} from '@stripe/stripe-js';
 import {Elements} from '@stripe/react-stripe-js';
 import Home from "./components/Home";
+//import Home1 from "./components/Home1";
 import Signup from "./components/auth/Signup";
 import SignIn from "./components/auth/Signin";
 import Welcome from "./components/auth/Welcome";
@@ -15,6 +16,7 @@ import EditGroup from "./components/groups/Edit";
 import CreateGroup from "./components/groups/Create";
 import Group from "./components/groups/Group";
 import CheckoutForm from "./components/Checkout";
+import Membership from "./components/Membership";
 import "./App.css";
 
 
@@ -45,6 +47,8 @@ const App = () => {
           <Route path="/" exact={true} component={RequireAuth(Home)} />
           <Route path="/my-profile" exact component={RequireAuth(MyProfile)} />
           <Route path="/my-groups" exact component={RequireAuth(MyGroups)} />
+          <Route path="/membership" exact component={RequireAuth(Membership)} />
+          
           <Route path="/group/:id" exact component={RequireAuth(Group)} />
           <Route path="/checkout/:id" exact component={RequireAuth(CheckoutForm)} />
           <Route

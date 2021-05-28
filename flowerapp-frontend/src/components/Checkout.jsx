@@ -12,7 +12,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import NavBar from './Appbar';
+import NavBar from './Navbar';
 import Paper from '@material-ui/core/Paper';
 import "../styles/checkout.css";
 import { monthlyDeal, arrangementDeals } from "../core/products";
@@ -245,7 +245,7 @@ console.log(subscriptionObject);
     </div>
   ) : (
     <React.Fragment>
-			<NavBar />
+			 <NavBar backgroundColor="bg-gray-100" />
 
 			<Container className={classes.layout}>
 				<Paper className={classes.paper}>
