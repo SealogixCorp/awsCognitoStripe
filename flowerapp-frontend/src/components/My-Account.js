@@ -6,6 +6,7 @@ import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Navbar from "./Navbar";
+<Navbar backgroundColor="bg-gray-100" />
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -53,7 +54,7 @@ export default () => {
       <main className={classes.layout}>
         <Paper className={classes.paper}>
           <Typography component="h1" variant="h4" align="center">
-            My Profile
+            My Account
           </Typography>
           <Grid>
             <Grid container spacing={3}>

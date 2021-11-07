@@ -1,6 +1,17 @@
 import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Auth } from "aws-amplify";
+import { makeStyles } from "@material-ui/core/styles";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import IconButton from "@material-ui/core/IconButton";
+import AccountCircle from "@material-ui/icons/AccountCircle";
+import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@material-ui/core/Menu";
+import Link from "@material-ui/core/Link";
+import Button from "@material-ui/core/Button";
+
 
 const Navbar = ({ backgroundColor = "bg-gray-900" }) => {
   const history = useHistory();
@@ -23,9 +34,6 @@ const Navbar = ({ backgroundColor = "bg-gray-900" }) => {
     isAuthincated();
   }, []);
 
-  const handleMenu = event => {
-    setAnchorEl(event.currentTarget);
-  };
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -38,6 +46,13 @@ const Navbar = ({ backgroundColor = "bg-gray-900" }) => {
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
   };
+
+  const handleMenu = event => {
+    setAnchorEl(event.currentTarget);
+  };
+
+
+
   return(
   <nav className={`${backgroundColor} shadow-md`}>
     <div className="max-w-7xl mx-auto px-12">
@@ -98,7 +113,7 @@ const Navbar = ({ backgroundColor = "bg-gray-900" }) => {
             {/* <img className="block lg:hidden h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg" alt="Workflow" />
                   <img className="hidden lg:block h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-logo-indigo-500-mark-white-text.svg" alt="Workflow" /> */}
                   <a href="/" className="   px-3 py-2 rounded-md text-sm font-medium">
-             <img className="block h-8 w-auto" src="logo.png" alt="logo"  />
+             <img className="block h-8 w-auto" src="/logo.png" alt="logo"  />
              </a>
           </div>
         </div>
@@ -125,12 +140,51 @@ const Navbar = ({ backgroundColor = "bg-gray-900" }) => {
         <div className="hidden md:block">
         <div className="ml-10 flex items-baseline space-x-4">
           {/* Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" */}
-          <a href="#" className="bg-gray-800 text-white px-3 py-2 rounded-md text-sm font-medium">My Account</a>
+          <a href="https://myflowerarchitect.com/arranger.html" target="_blank" className="text-gray-800 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Arrange Flowers</a> 
           <a href="/membership" className="text-gray-800 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-sm font-medium">My Memebership</a>
           <a href="/my-groups" className="text-gray-800 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-sm font-medium">My Groups</a>
-          <a href="#" className="text-gray-800 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Create Group</a>
+          <a href="/group/create" className="text-gray-800 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Create Group</a>
           <a href="#" className="text-gray-800 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Languages</a>
-        </div>
+        
+          <div>
+              <IconButton
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right"
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right"
+                }}
+                open={open}
+                onClose={handleClose}
+              >
+                <MenuItem
+                  onClick={() => {
+                    history.push("/my-profile");
+                  }}
+                > My Profile</MenuItem>
+                                <MenuItem
+                  onClick={() => {
+                    history.push("/my-profile");
+                  }}
+                > My Account</MenuItem>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              </Menu>
+            </div>        
+            </div>
 
       </div>
           ) :

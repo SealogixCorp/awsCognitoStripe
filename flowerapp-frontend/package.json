@@ -34,7 +34,7 @@
   },
   "scripts": {
     "start": "yarn build:style && react-scripts start",
-    "build": "set INLINE_RUNTIME_CHUNK=false &&  build:style && react-scripts build",
+    "build": "set INLINE_RUNTIME_CHUNK=false &&  react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "build:style": "tailwind build src/styles/index.css -o src/styles/tailwind.css"

@@ -13,7 +13,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import NavBar from "../Appbar";
+import Navbar from "../Navbar";
 import Paper from "@material-ui/core/Paper";
 
 const useStyles = makeStyles(theme => ({
@@ -86,7 +86,7 @@ export default () => {
         const user = await Auth.currentAuthenticatedUser();
         console.log(user.signInUserSession.idToken.jwtToken);
         const response = await axios.post(
-          "https://cors-anywhere.herokuapp.com/https://api.myflowerarchitect.com/group/create",
+          "https://api.myflowerarchitect.com/group/create",
           { ...values },
           {
             headers: {
@@ -119,8 +119,7 @@ export default () => {
 
   return (
     <React.Fragment>
-      <NavBar />
-
+      <Navbar backgroundColor="bg-gray-100" />
       <Container className={classes.layout}>
         <Paper className={classes.paper}>
           <CssBaseline />

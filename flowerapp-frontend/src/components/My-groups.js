@@ -16,7 +16,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import axios from "axios";
 import { Auth } from "aws-amplify";
-import Appbar from './Appbar';
+import Navbar from './Navbar';
 
 const columns = [
   { id: 'tit', label: 'Title', minWidth: 170 },
@@ -108,7 +108,7 @@ export default ()=> {
  const getMyGroups = async () => {
    try {
        const user = await Auth.currentAuthenticatedUser();
-     const response = await  axios.get("https://cors-anywhere.herokuapp.com/https://api.myflowerarchitect.com/group/mygroups", {
+     const response = await  axios.get("https://api.myflowerarchitect.com/group/mygroups", {
    headers: {
      'Authorization': `Bearer ${user.signInUserSession.idToken.jwtToken}`,
      "Accept": "application/json",
@@ -204,7 +204,7 @@ Edit
 }
   return (
     <React.Fragment>
-    <Appbar />
+      <Navbar backgroundColor="bg-gray-100" />
       <main className={classes.layout}>
         <Paper  className={classes.root}>
         <Typography component="h1" variant="h4" align="center">
