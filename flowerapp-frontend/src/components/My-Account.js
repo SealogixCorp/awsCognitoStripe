@@ -80,25 +80,28 @@ export default () => {
     return null;
   }
   
-  const handleChange = (e) => {
-    let obj = ""
-    if(e.target.name.includes("address.")) {
-      obj = {...profile, address: {
-        ...profile.address, 
-        [e.target.name]: e.target.value
-      }}
-      setProfile(obj)
-    } else if (e.target.name.includes("shipping.")) {
-      obj = {...profile, shipping: {
-        ...profile.shipping, 
-        [e.target.name]: e.target.value
-      }}
-      setProfile(obj)
-    } else {
-      obj = {...profile, [e.target.name]: e.target.value}
-      setProfile(obj)
-    }
+ const handleChange = (e) => {
+
+  if(e.target.id.includes("address.")) {
+    setProfile({...profile, address:{
+      ...profile.address,
+      [e.target.name]:e.target.value
+    }})
+  } else if (e.target.id.includes("shipping.")) {
+      setProfile({...profile, shipping:{
+      ...profile.shipping,
+      [e.target.name]:e.target.value
+    }})
+
+
+  } else {
+      setProfile({...profile,
+      [e.target.name]:e.target.value})
+       return;
+    
   }
+  
+}
 
   return (
     <React.Fragment>
@@ -198,7 +201,7 @@ export default () => {
           <Grid container spacing={3}>
               <TextField
                 id="address.line1"
-                name="address.line1"
+                name="line1"
                 value={profile.address.line1}
                 label="Line 1"
                 fullWidth
@@ -209,52 +212,57 @@ export default () => {
             </Grid>
             <Grid container spacing={3}>
               <TextField
-                id="aline2"
-                name="aline2"
+                id="address.line2"
+                name="line2"
                 value={profile.address.line2}
                 label="Line 2"
                 fullWidth
                 autoComplete=""
+                 onChange={handleChange}
               />
             </Grid>
             <Grid container spacing={3}>
               <TextField
-                id="acity"
-                name="acity"
+                id="address.city"
+                name="city"
                 value={profile.address.city}
                 label="City"
                 fullWidth
                 autoComplete=""
+                onChange={handleChange}
               />
             </Grid>
             <Grid container spacing={3}>
               <TextField
-                id="astate"
-                name="astate"
+                id="address.state"
+                name="state"
                 value={profile.address.state}
                 label="State"
                 fullWidth
                 autoComplete=""
+                 onChange={handleChange}
               />
             </Grid>
             <Grid container spacing={3}>
               <TextField
-                id="azip"
-                name="azip"
+                id="address.zip"
+                name="zip"
                 value={profile.address.zip}
                 label="Zip"
                 fullWidth
                 autoComplete=""
+                onChange={handleChange}
               />
             </Grid>
             <Grid container spacing={3}>
               <TextField
-                id="acountry"
-                name="acountry"
+                id="address.country"
+                name="country"
                 value={profile.address.country}
                 label="Country"
                 fullWidth
                 autoComplete=""
+                onChange={handleChange}
               />
             </Grid>
             </div>
@@ -264,62 +272,68 @@ export default () => {
           </Typography>
           <Grid container spacing={3}>
               <TextField
-                id="sline1"
-                name="sline1"
+                id="shipping.line1"
+                name="line1"
                 value={profile.shipping.line1}
                 label="Line 1"
                 fullWidth
                 autoComplete=""
+                onChange={handleChange}
               />
             </Grid>
             <Grid container spacing={3}>
               <TextField
-                id="sline2"
-                name="sline2"
+                id="shipping.line2"
+                name="line2"
                 value={profile.shipping.line2}
                 label="Line 2"
                 fullWidth
                 autoComplete=""
+                onChange={handleChange}
               />
             </Grid>
             <Grid container spacing={3}>
               <TextField
-                id="scity"
-                name="scity"
+                id="shipping.city"
+                name="city"
                 value={profile.shipping.city}
                 label="City"
                 fullWidth
                 autoComplete=""
+                onChange={handleChange}
               />
             </Grid>
             <Grid container spacing={3}>
               <TextField
-                id="sstate"
-                name="sstate"
+                id="shipping.state"
+                name="state"
                 value={profile.shipping.state}
                 label="State"
                 fullWidth
                 autoComplete=""
+                onChange={handleChange}
               />
             </Grid>
             <Grid container spacing={3}>
               <TextField
-                id="szip"
-                name="szip"
+                id="shipping.zip"
+                name="zip"
                 value={profile.shipping.zip}
                 label="Zip"
                 fullWidth
                 autoComplete=""
+                onChange={handleChange}
               />
             </Grid>
             <Grid container spacing={3}>
               <TextField
-                id="scountry"
-                name="scountry"
+                id="shipping.country"
+                name="country"
                 value={profile.shipping.country}
                 label="Country"
                 fullWidth
                 autoComplete=""
+                onChange={handleChange}
               />
             </Grid>
             </div>
