@@ -140,8 +140,9 @@ const Navbar = ({ backgroundColor = "bg-gray-900" }) => {
         <div className="hidden md:block">
         <div className="ml-10 flex items-baseline space-x-4">
           {/* Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" */}
+          <a href="https://www.flowerarchitect.club" target="_blank" className="text-gray-800 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Home</a> 
           <a href="https://myflowerarchitect.com/arranger.html" target="_blank" className="text-gray-800 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Arrange Flowers</a> 
-          <a href="/membership" className="text-gray-800 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-sm font-medium">My Memebership</a>
+          <a href="/account/membership" className="text-gray-800 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-sm font-medium">My Memebership</a>
           <a href="/my-groups" className="text-gray-800 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-sm font-medium">My Groups</a>
           <a href="/group/create" className="text-gray-800 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Create Group</a>
           <a href="#" className="text-gray-800 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Languages</a>
@@ -171,14 +172,10 @@ const Navbar = ({ backgroundColor = "bg-gray-900" }) => {
                 open={open}
                 onClose={handleClose}
               >
+
                 <MenuItem
                   onClick={() => {
-                    history.push("/my-profile");
-                  }}
-                > My Profile</MenuItem>
-                                <MenuItem
-                  onClick={() => {
-                    history.push("/my-profile");
+                    history.push("/account/profile");
                   }}
                 > My Account</MenuItem>
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
