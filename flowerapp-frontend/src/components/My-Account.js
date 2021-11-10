@@ -109,6 +109,9 @@ export default () => {
       <main className={classes.layout}>
         <Paper className={classes.paper}>
           <Typography component="h1" variant="h4" align="center">
+            Role Type = {profile.name} // change to data.data.role
+          </Typography>
+          <Typography component="h1" variant="h4" align="center">
             My Profile
           </Typography>
           <Grid>
