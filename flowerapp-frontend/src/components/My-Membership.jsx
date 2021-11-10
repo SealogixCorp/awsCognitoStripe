@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
@@ -6,11 +6,14 @@ import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Navbar from "./Navbar";
-<Navbar backgroundColor="bg-gray-100" />
+import { useHistory } from "react-router-dom";
+import { Auth } from "aws-amplify";
+import axios from "axios";
+<Navbar backgroundColor="bg-gray-100" />;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   appBar: {
-    position: "relative"
+    position: "relative",
   },
   layout: {
     width: "auto",
@@ -19,8 +22,8 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
       width: 600,
       marginLeft: "auto",
-      marginRight: "auto"
-    }
+      marginRight: "auto",
+    },
   },
   paper: {
     marginTop: theme.spacing(3),
@@ -29,24 +32,58 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
       marginTop: theme.spacing(6),
       marginBottom: theme.spacing(6),
-      padding: theme.spacing(3)
-    }
+      padding: theme.spacing(3),
+    },
   },
   stepper: {
-    padding: theme.spacing(3, 0, 5)
+    padding: theme.spacing(3, 0, 5),
   },
   buttons: {
     display: "flex",
-    justifyContent: "flex-end"
+    justifyContent: "flex-end",
   },
   button: {
     marginTop: theme.spacing(3),
-    marginLeft: theme.spacing(1)
-  }
+    marginLeft: theme.spacing(1),
+  },
 }));
 
 export default () => {
   const classes = useStyles();
+  const history = useHistory();
+  const [membershipData, setMembershipData] = useState();
+  useEffect(() => {
+    const getMembershipData = async () => {
+      try {
+        const user = await Auth.currentAuthenticatedUser();
+        const response = await axios.get(
+          `https://api.myflowerarchitect.com/arranger/account/membership`,
+          {
+            headers: {
+              Authorization: `Bearer ${user.signInUserSession.idToken.jwtToken}`,
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Methods": "*",
+            },
+          }
+        );
+        let md = response.data.data;
+
+        md["storageTokensAvailable"] =
+          md["mst"] + md["est"] - md["ast"] - md["bst"] - md["sst"];
+        md["availableVenueStorageTokens"] = md["avs"] + md["mve"] - md["ves"];
+        console.log(md);
+        setMembershipData(md);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getMembershipData();
+  }, []);
+  if (!membershipData) {
+    return null;
+  }
 
   return (
     <React.Fragment>
@@ -54,14 +91,25 @@ export default () => {
       <main className={classes.layout}>
         <Paper className={classes.paper}>
           <Typography component="h1" variant="h4" align="center">
-            My Account
+            My Membership
           </Typography>
           <Grid>
             <Grid container spacing={3}>
               <TextField
-                id="storageTokensAvailable"  // mst + est - ast - bst - sst
+                id="role"
+                name="role"
+                value={membershipData.role}
+                label="Role"
+                fullWidth
+                autoComplete="0"
+              />
+            </Grid>
+            <Grid container spacing={3}>
+              <TextField
+                id="storageTokensAvailable" // mst + est - ast - bst - sst
                 name="storageTokensAvailable"
-                label="Storage Tokens Availablee"
+                value={membershipData.storageTokensAvailable}
+                label="Storage Tokens Available"
                 fullWidth
                 autoComplete="0"
               />
@@ -69,7 +117,8 @@ export default () => {
             <Grid container spacing={3}>
               <TextField
                 id="enlargementTokensAvailable" // eta
-                name="enlargementTokensAvailable"
+                name="eta"
+                value={membershipData.eta}
                 label="Enlargement Tokens Available"
                 fullWidth
                 autoComplete="0"
@@ -78,7 +127,8 @@ export default () => {
             <Grid container spacing={3}>
               <TextField
                 id="emailTokensAvailable" // qta
-                name="emailTokensAvailable"
+                name="qta"
+                value={membershipData.qta}
                 label="Email Tokens Available"
                 fullWidth
                 autoComplete="0"
@@ -86,8 +136,9 @@ export default () => {
             </Grid>
             <Grid container spacing={3}>
               <TextField
-                id="venueStorageTokensAvailable" // avs + mve -ves
+                id="venueStorageTokensAvailable" // avs + mve - ves
                 name="availableVenueStorageTokens"
+                value={membershipData.availableVenueStorageTokens}
                 label="Venue Storage Tokens Available"
                 fullWidth
                 autoComplete="0"
@@ -96,7 +147,8 @@ export default () => {
             <Grid container spacing={3}>
               <TextField
                 id="arrangementsStored" // ast
-                name="arrangementsStored"
+                name="ast"
+                value={membershipData.ast}
                 label="Number of Arrangements Stored"
                 fullWidth
                 autoComplete="0"
@@ -105,7 +157,8 @@ export default () => {
             <Grid container spacing={3}>
               <TextField
                 id="basketsStored" // bst
-                name="basketsStored"
+                name="bst"
+                value={membershipData.bst}
                 label="Number of Baskets Stored"
                 fullWidth
                 autoComplete="0"
@@ -114,7 +167,8 @@ export default () => {
             <Grid container spacing={3}>
               <TextField
                 id="scenesStored" // sst
-                name="scenesStored"
+                name="sst"
+                value={membershipData.sst}
                 label="Number of Scenes Stored"
                 fullWidth
                 autoComplete="0"
@@ -123,7 +177,8 @@ export default () => {
             <Grid container spacing={3}>
               <TextField
                 id="venueStored" // ves
-                name="venueStored"
+                name="ves"
+                value={membershipData.ves}
                 label="Number of Venues Stored"
                 fullWidth
                 autoComplete="0"
@@ -132,7 +187,8 @@ export default () => {
             <Grid container spacing={3}>
               <TextField
                 id="maxUsers" // mus
-                name="maxUsers"
+                name="mus"
+                value={membershipData.mus}
                 label="Maximum Users Available For Your Account"
                 fullWidth
                 autoComplete="0"
@@ -141,7 +197,8 @@ export default () => {
             <Grid container spacing={3}>
               <TextField
                 id="currentUsers" // qty
-                name="currentUsers"
+                name="qty"
+                value={membershipData.qty}
                 label="Current Users Active On Your Account"
                 fullWidth
                 autoComplete="0"
@@ -150,7 +207,8 @@ export default () => {
             <Grid container spacing={3}>
               <TextField
                 id="appStoreMonthlyDueDate" // app_store_monthly_due_date
-                name="appStoreMonthlyDueDate"
+                name="app_store_monthly_due_date"
+                value={membershipData.app_store_monthly_due_date}
                 label="App Store Monthly Due Date"
                 fullWidth
                 autoComplete=""
@@ -159,7 +217,8 @@ export default () => {
             <Grid container spacing={3}>
               <TextField
                 id="playStoreMonthlyDueDate" // play_store_monthly_due_date
-                name="playStoreMonthlyDueDate"
+                name="play_store_monthly_due_date"
+                value={membershipData.play_store_monthly_due_date}
                 label="Play Store Monthly Due Date"
                 fullWidth
                 autoComplete=""
@@ -168,16 +227,28 @@ export default () => {
             <Grid container spacing={3}>
               <TextField
                 id="stripeMonthlyDueDate" // stripe_monthly_due_date
-                name="stripeMonthlyDueDate"
+                name="stripe_monthly_due_date"
+                value={membershipData.stripe_monthly_due_date}
                 label="Stripe Monthly Due Date"
                 fullWidth
                 autoComplete=""
               />
             </Grid>
           </Grid>
-          
+          <div className={classes.buttons}>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={() => {
+                history.push("/");
+              }}
+            >
+              Upgrade
+            </Button>
+          </div>
 
-    {/* s1 = "SELECT "
+          {/* s1 = "SELECT "
     s1 += "json_build_object( "
     s1 += "'ast', ast, " # Number of arrangements stored currently
     s1 += "'avs', avs, " # Additional venue storage purchased
@@ -199,15 +270,6 @@ export default () => {
     s1 += "FROM "
     s1 += "membership "
     s1 += "WHERE usr = %(userId)s "  */}
-          <div className={classes.buttons}>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-            >
-              Next
-            </Button>
-          </div>
         </Paper>
       </main>
     </React.Fragment>
