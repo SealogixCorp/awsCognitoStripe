@@ -1,19 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
 import Navbar from "./Navbar";
 import { useHistory } from "react-router-dom";
 import { Auth } from "aws-amplify";
 import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
-  appBar: {
-    position: "relative",
-  },
+
   layout: {
     width: "auto",
     marginLeft: theme.spacing(2),
@@ -23,28 +16,7 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: "auto",
       marginRight: "auto",
     },
-  },
-  paper: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(3),
-    padding: theme.spacing(2),
-    [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
-      marginTop: theme.spacing(6),
-      marginBottom: theme.spacing(6),
-      padding: theme.spacing(3),
-    },
-  },
-  stepper: {
-    padding: theme.spacing(3, 0, 5),
-  },
-  buttons: {
-    display: "flex",
-    justifyContent: "flex-end",
-  },
-  button: {
-    marginTop: theme.spacing(3),
-    marginLeft: theme.spacing(1),
-  },
+  }
 }));
 
 export default () => {
@@ -90,7 +62,10 @@ export default () => {
     return true;
   };
 
-  const updateProfile = async () => {
+  const updateProfile = async (e) => {
+    e.preventDefault();
+    console.log("testing")
+    
     try {
       const user = await Auth.currentAuthenticatedUser();
       console.log(user.signInUserSession.idToken.jwtToken);
@@ -140,304 +115,284 @@ export default () => {
     <React.Fragment>
       <Navbar backgroundColor="bg-gray-100" />
       <main className={classes.layout}>
-        <Paper className={classes.paper}>
-          <Typography component="h1" variant="h4" align="center">
-            Role Type = {role}
-          </Typography>
-          {!ifDesigner(role) && (
-            <div className={classes.buttons}>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
+      <div className="bg-white shadow-lg rounded-md p-4 m-4">
+
+<form className="w-full max-w-lg" onSubmit={updateProfile}>
+<h1 className="text-3xl center my-4 text-center"> My Profile</h1>
+
+<div>
+        <p>    Role Type = {role}
+        <button  
+                className="p-2 rounded-sm bg-blue-700 text-white"
                 onClick={() => {
                   history.push("/");
                 }}
               >
                 Upgrade
-              </Button>
-            </div>
+              </button>
+          {!ifDesigner("role") && (
+              <button  
+                className="p-4 rounded-sm bg-blue-700 text-white"
+                onClick={() => {
+                  history.push("/");
+                }}
+              >
+                Upgrade
+              </button>
+         
           )}
-          <Typography component="h1" variant="h4" align="center">
-            My Profile
-          </Typography>
-          <Grid>
-            <Grid container spacing={3}>
-              <TextField
-                id="name"
+        </p>
+          </div>
+        
+        <div className="flex flex-wrap -mx-3 mb-6">
+          <div className="w-full px-3 mb-6 md:mb-0">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="name">
+             Full Name
+            </label>
+            <input className="appearance-none block w-full bg-gray-100  border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-first-name" type="text" placeholder="Jane"
+              id="name"
                 name="name"
                 value={profile.name}
-                label="Full Name"
-                fullWidth
-                autoComplete="Full Name"
                 onChange={handleChange}
-              />
-            </Grid>
-            <Grid container spacing={3}>
-              <TextField
-                id="username"
-                name="username"
-                value={profile.username}
-                label="User Name"
-                fullWidth
-                autoComplete="User Name"
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid container spacing={3}>
-              <TextField
-                id="gender"
+            />
+            
+          </div>
+        </div>
+         <div className="flex flex-wrap -mx-3 mb-6">
+          <div className="w-full px-3 mb-6 md:mb-0">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="username">
+             User Name
+            </label>
+            <input className="appearance-none block w-full bg-gray-100  border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-first-name" type="text" placeholder="Jane"
+            id="username"
+            name="username"
+            value={profile.username}
+            onChange={handleChange}
+            />
+            
+          </div>
+        </div>
+         <div className="flex flex-wrap -mx-3 mb-6">
+          <div className="w-full px-3 mb-6 md:mb-0">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="gender">
+             Gender
+            </label>
+            <input className="appearance-none block w-full bg-gray-100  border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-first-name" type="text" placeholder="Jane"
+            id="gender"
                 name="gender"
                 value={profile.gender}
-                label="Gender"
-                fullWidth
-                autoComplete="M or F"
                 onChange={handleChange}
-              />
-            </Grid>
-            <Grid container spacing={3}>
-              <TextField
-                id="locaton"
+            />
+            
+          </div>
+        </div>
+         <div className="flex flex-wrap -mx-3 mb-6">
+          <div className="w-full px-3 mb-6 md:mb-0">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="location">
+             Location
+            </label>
+            <input className="appearance-none block w-full bg-gray-100  border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" type="text" placeholder="Jane"
+               id="locaton"
                 name="location"
                 value={profile.location}
-                label="Location"
-                fullWidth
-                autoComplete="Location"
                 onChange={handleChange}
-              />
-            </Grid>
-            <Grid container spacing={3}>
-              <TextField
-                id="website"
+            /> 
+          </div>
+        </div>
+          <div className="flex flex-wrap -mx-3 mb-6">
+          <div className="w-full px-3 mb-6 md:mb-0">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="website">
+             Website
+            </label>
+            <input className="appearance-none block w-full bg-gray-100  border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" type="text" placeholder="Jane"
+               id="website"
                 name="website"
                 value={profile.website}
-                label="Your Website"
-                fullWidth
-                autoComplete="https://www..."
                 onChange={handleChange}
-              />
-            </Grid>
-            <Grid container spacing={3}>
-              <TextField
-                id="picture"
+            /> 
+          </div>
+        </div>
+          <div className="flex flex-wrap -mx-3 mb-6">
+          <div className="w-full px-3 mb-6 md:mb-0">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="picture">
+             Picture
+            </label>
+            <input className="appearance-none block w-full bg-gray-100  border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" type="text" placeholder="Jane"
+               id="picture"
                 name="picture"
                 value={profile.picture}
-                label="Picture"
-                fullWidth
-                autoComplete="Link to Your picture"
                 onChange={handleChange}
-              />
-            </Grid>
-            <Grid container spacing={3}>
-              <TextField
-                id="phone"
+            /> 
+          </div>
+        </div>
+          <div className="flex flex-wrap -mx-3 mb-6">
+          <div className="w-full px-3 mb-6 md:mb-0">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="phone">
+             Phone
+            </label>
+            <input className="appearance-none block w-full bg-gray-100  border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" type="text" placeholder="Jane"
+               id="phone"
                 name="phone"
                 value={profile.phone}
-                label="Phone"
-                fullWidth
-                autoComplete="01-734-555-1212"
                 onChange={handleChange}
-              />
-            </Grid>
-            <div className="mt-8">
-              <Typography component="h1" variant="h4" align="center">
-                My Mailing Address
-              </Typography>
-              <Grid container spacing={3}>
-                <TextField
-                  id="address.line1"
+            /> 
+          </div>
+        </div>
+        <h2 className="text-2xl center my-4 text-center border-none border-b"> My Mailing Address</h2>
+  
+           <div className="flex flex-wrap -mx-3 mb-6">
+          <div className="w-full px-3 mb-6 md:mb-0">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="address.line1">
+             Line 1
+            </label>
+            <input className="appearance-none block w-full bg-gray-100  border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" type="text" placeholder="Jane"
+               id="address.line1"
                   name="line1"
                   value={profile.address.line1}
-                  label="Line 1"
-                  fullWidth
-                  autoComplete=""
                   onChange={handleChange}
-                />
-              </Grid>
-              <Grid container spacing={3}>
-                <TextField
-                  id="address.line2"
+            /> 
+          </div>
+        </div>
+          <div className="flex flex-wrap -mx-3 mb-6">
+          <div className="w-full px-3 mb-6 md:mb-0">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="address.line2">
+             Line 2
+            </label>
+            <input className="appearance-none block w-full bg-gray-100  border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" type="text" placeholder="Jane"
+               id="address.line2"
                   name="line2"
                   value={profile.address.line2}
-                  label="Line 2"
-                  fullWidth
-                  autoComplete=""
                   onChange={handleChange}
-                />
-              </Grid>
-              <Grid container spacing={3}>
-                <TextField
-                  id="address.city"
-                  name="city"
-                  value={profile.address.city}
-                  label="City"
-                  fullWidth
-                  autoComplete=""
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid container spacing={3}>
-                <TextField
-                  id="address.state"
-                  name="state"
-                  value={profile.address.state}
-                  label="State"
-                  fullWidth
-                  autoComplete=""
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid container spacing={3}>
-                <TextField
-                  id="address.zip"
-                  name="zip"
-                  value={profile.address.zip}
-                  label="Zip"
-                  fullWidth
-                  autoComplete=""
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid container spacing={3}>
-                <TextField
-                  id="address.country"
+            /> 
+          </div>
+        </div>
+          <div className="flex flex-wrap -mx-3 mb-6">
+          <div className="w-full px-3 mb-6 md:mb-0">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="address.country">
+             Country
+            </label>
+            <input className="appearance-none block w-full bg-gray-100  border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" type="text" placeholder="Jane"
+               id="address.country"
                   name="country"
                   value={profile.address.country}
-                  label="Country"
-                  fullWidth
-                  autoComplete=""
                   onChange={handleChange}
-                />
-              </Grid>
-            </div>
-            <div className="mt-8">
-              <Typography component="h1" variant="h4" align="center">
-                My Shipping Address
-              </Typography>
-              <Grid container spacing={3}>
-                <TextField
-                  id="shipping.line1"
+            /> 
+          </div>
+        </div>
+        <div className="flex flex-wrap -mx-3 mb-2">
+          <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="address.city">
+              City
+            </label>
+            <input className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"  type="text" placeholder="Albuquerque" 
+            id="address.city"
+                  name="city"
+                  value={profile.address.city}
+                  onChange={handleChange}
+            />
+          </div>
+          <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="address.state">
+              State
+            </label>
+           <input className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"  type="text" placeholder="Albuquerque" 
+              id="address.state"
+                  name="state"
+                  value={profile.address.state}
+                  onChange={handleChange}
+            />
+          </div>
+          <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="address.zip">
+              Zip
+            </label>
+            <input className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"  type="text" placeholder={90210}
+            id="address.zip"
+                  name="zip"
+                  value={profile.address.zip}
+                  onChange={handleChange}
+            />
+          </div>
+        </div>
+        <h2 className="text-2xl center my-4 text-center border-none border-b"> My Shipping Address</h2>
+          <div className="flex flex-wrap -mx-3 mb-6">
+          <div className="w-full px-3 mb-6 md:mb-0">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="shipping.line1">
+             Line 1
+            </label>
+            <input className="appearance-none block w-full bg-gray-100  border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" type="text" placeholder="Jane"
+               id="shipping.line1"
                   name="line1"
                   value={profile.shipping.line1}
-                  label="Line 1"
-                  fullWidth
-                  autoComplete=""
                   onChange={handleChange}
-                />
-              </Grid>
-              <Grid container spacing={3}>
-                <TextField
-                  id="shipping.line2"
+            /> 
+          </div>
+        </div>
+          <div className="flex flex-wrap -mx-3 mb-6">
+          <div className="w-full px-3 mb-6 md:mb-0">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="shipping.line2">
+             Line 2
+            </label>
+            <input className="appearance-none block w-full bg-gray-100  border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" type="text" placeholder="Jane"
+               id="shipping.line2"
                   name="line2"
                   value={profile.shipping.line2}
-                  label="Line 2"
-                  fullWidth
-                  autoComplete=""
                   onChange={handleChange}
-                />
-              </Grid>
-              <Grid container spacing={3}>
-                <TextField
-                  id="shipping.city"
-                  name="city"
-                  value={profile.shipping.city}
-                  label="City"
-                  fullWidth
-                  autoComplete=""
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid container spacing={3}>
-                <TextField
-                  id="shipping.state"
-                  name="state"
-                  value={profile.shipping.state}
-                  label="State"
-                  fullWidth
-                  autoComplete=""
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid container spacing={3}>
-                <TextField
-                  id="shipping.zip"
-                  name="zip"
-                  value={profile.shipping.zip}
-                  label="Zip"
-                  fullWidth
-                  autoComplete=""
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid container spacing={3}>
-                <TextField
-                  id="shipping.country"
+            /> 
+          </div>
+        </div>
+          <div className="flex flex-wrap -mx-3 mb-6">
+          <div className="w-full px-3 mb-6 md:mb-0">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="shipping.country">
+             Country
+            </label>
+            <input className="appearance-none block w-full bg-gray-100  border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" type="text" placeholder="Jane"
+               id="shipping.country"
                   name="country"
                   value={profile.shipping.country}
-                  label="Country"
-                  fullWidth
-                  autoComplete=""
                   onChange={handleChange}
-                />
-              </Grid>
-            </div>
-          </Grid>
-
-          {/* returnData = {
-'email': boto3.client('kms').decrypt(CiphertextBlob=b64decode(bytes.fromhex(userData['encrypted_email'])))['Plaintext'].decode('utf-8'),
-'name': boto3.client('kms').decrypt(CiphertextBlob=b64decode(bytes.fromhex(userData['encrypted_name'])))['Plaintext'].decode('utf-8'),
-'username': boto3.client('kms').decrypt(CiphertextBlob=b64decode(bytes.fromhex(userData['encrypted_username'])))['Plaintext'].decode('utf-8'),
-'role': userData['rol'],
-'location': userData['location'],
-'lang': userData['lang'],
-'profile': profile,
-'zen' : userData['zen']
-} */}
-
-          {/* Contents of profile */}
-          {/* name: { type: String, default: "", index: true },
-gender: { type: String, default: "" },
-location: { type: String, default: "" },
-website: { type: String, default: "" },
-picture: { type: String, default: "" },
-phoneNumber: { type: String, default: "" },
-email: { type: String, default: "" },
-region: "us-west-2",
-userPoolId: "us-west-2_f5jKM0twH"
-"clientId": "4ba0p0nr4gni41ubqt36i05gde",
-address: {
-'line1: '', # (e.g., street, PO Box, or company name)
-'city': "", # City
-'state': '', #State, county, province, or region.
-'postal_code': # ZIP or postal code.
-'country' 'US'
-},
-shipping: {
-'address': {
-'line1: '', # (e.g., street, PO Box, or company name) encrypted
-'line2' '', # (e.g., apartment, suite, unit, or building) encrypted
-'city': "", # City
-'state': '', #State, county, province, or region.
-'postal_code': # ZIP or postal code.
-'country' 'US'
-},
-'name': '', encrypted
-'phone': '' encrypted
-}
-},
-gdpr: { type: Boolean, default: false }, // GDPR agreement. */}
-
-          <div className={classes.buttons}>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={updateProfile}
-            >
-              Submit
-            </Button>
+            /> 
           </div>
-        </Paper>
+        </div>
+        <div className="flex flex-wrap -mx-3 mb-2">
+          <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="shipping.city">
+              City
+            </label>
+            <input className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"  type="text" placeholder="Albuquerque" 
+            id="shipping.city"
+                  name="city"
+                  value={profile.shipping.city}
+                  onChange={handleChange}
+            />
+          </div>
+          <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="shipping.state">
+              State
+            </label>
+           <input className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"  type="text" placeholder="Albuquerque" 
+              id="shipping.state"
+                  name="state"
+                  value={profile.shipping.state}
+                  onChange={handleChange}
+            />
+          </div>
+          <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="shipping.zip">
+              Zip
+            </label>
+            <input className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"  type="text" placeholder={90210}
+            id="shipping.zip"
+                  name="zip"
+                  value={profile.shipping.zip}
+                  onChange={handleChange}
+            />
+          </div>
+        </div>
+       <div className="text-center my-8">
+        <input type="submit" value="Submit" className="p-2 rounded-md text-white bg-blue-600"/></div>
+      </form>
+      </div>
       </main>
     </React.Fragment>
   );
