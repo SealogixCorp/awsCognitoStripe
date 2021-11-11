@@ -89,166 +89,186 @@ export default () => {
     <React.Fragment>
       <Navbar backgroundColor="bg-gray-100" />
       <main className={classes.layout}>
-        <Paper className={classes.paper}>
-          <Typography component="h1" variant="h4" align="center">
-            My Membership
-          </Typography>
-          <Grid>
-            <Grid container spacing={3}>
-              <TextField
-                id="role"
-                name="role"
-                value={membershipData.role}
-                label="Role"
-                fullWidth
-                autoComplete="0"
-              />
-            </Grid>
-            <Grid container spacing={3}>
-              <TextField
-                id="storageTokensAvailable" // mst + est - ast - bst - sst
-                name="storageTokensAvailable"
-                value={membershipData.storageTokensAvailable}
-                label="Storage Tokens Available"
-                fullWidth
-                autoComplete="0"
-              />
-            </Grid>
-            <Grid container spacing={3}>
-              <TextField
-                id="enlargementTokensAvailable" // eta
-                name="eta"
-                value={membershipData.eta}
-                label="Enlargement Tokens Available"
-                fullWidth
-                autoComplete="0"
-              />
-            </Grid>
-            <Grid container spacing={3}>
-              <TextField
-                id="emailTokensAvailable" // qta
-                name="qta"
-                value={membershipData.qta}
-                label="Email Tokens Available"
-                fullWidth
-                autoComplete="0"
-              />
-            </Grid>
-            <Grid container spacing={3}>
-              <TextField
-                id="venueStorageTokensAvailable" // avs + mve - ves
-                name="availableVenueStorageTokens"
-                value={membershipData.availableVenueStorageTokens}
-                label="Venue Storage Tokens Available"
-                fullWidth
-                autoComplete="0"
-              />
-            </Grid>
-            <Grid container spacing={3}>
-              <TextField
-                id="arrangementsStored" // ast
-                name="ast"
-                value={membershipData.ast}
-                label="Number of Arrangements Stored"
-                fullWidth
-                autoComplete="0"
-              />
-            </Grid>
-            <Grid container spacing={3}>
-              <TextField
-                id="basketsStored" // bst
-                name="bst"
-                value={membershipData.bst}
-                label="Number of Baskets Stored"
-                fullWidth
-                autoComplete="0"
-              />
-            </Grid>
-            <Grid container spacing={3}>
-              <TextField
-                id="scenesStored" // sst
-                name="sst"
-                value={membershipData.sst}
-                label="Number of Scenes Stored"
-                fullWidth
-                autoComplete="0"
-              />
-            </Grid>
-            <Grid container spacing={3}>
-              <TextField
-                id="venueStored" // ves
-                name="ves"
-                value={membershipData.ves}
-                label="Number of Venues Stored"
-                fullWidth
-                autoComplete="0"
-              />
-            </Grid>
-            <Grid container spacing={3}>
-              <TextField
-                id="maxUsers" // mus
-                name="mus"
-                value={membershipData.mus}
-                label="Maximum Users Available For Your Account"
-                fullWidth
-                autoComplete="0"
-              />
-            </Grid>
-            <Grid container spacing={3}>
-              <TextField
-                id="currentUsers" // qty
-                name="qty"
-                value={membershipData.qty}
-                label="Current Users Active On Your Account"
-                fullWidth
-                autoComplete="0"
-              />
-            </Grid>
-            <Grid container spacing={3}>
-              <TextField
-                id="appStoreMonthlyDueDate" // app_store_monthly_due_date
-                name="app_store_monthly_due_date"
-                value={membershipData.app_store_monthly_due_date}
-                label="App Store Monthly Due Date"
-                fullWidth
-                autoComplete=""
-              />
-            </Grid>
-            <Grid container spacing={3}>
-              <TextField
-                id="playStoreMonthlyDueDate" // play_store_monthly_due_date
-                name="play_store_monthly_due_date"
-                value={membershipData.play_store_monthly_due_date}
-                label="Play Store Monthly Due Date"
-                fullWidth
-                autoComplete=""
-              />
-            </Grid>
-            <Grid container spacing={3}>
-              <TextField
-                id="stripeMonthlyDueDate" // stripe_monthly_due_date
-                name="stripe_monthly_due_date"
-                value={membershipData.stripe_monthly_due_date}
-                label="Stripe Monthly Due Date"
-                fullWidth
-                autoComplete=""
-              />
-            </Grid>
-          </Grid>
-          <div className={classes.buttons}>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={() => {
-                history.push("/");
-              }}
-            >
-              Upgrade
-            </Button>
-          </div>
+        <div className="bg-white shadow-lg rounded-md p-4 m-4">
+          <form className="w-full max-w-lg">
+            <h1 className="text-3xl center my-4 text-center"> My Profile</h1>
+            <div className="flex flex-wrap -mx-3 mb-6">
+              <div className="w-full px-3 mb-6 md:mb-0">
+                <label
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                  htmlFor="role"
+                >
+                  Role
+                </label>
+                <input
+                  className="appearance-none block w-full bg-gray-100  border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                  type="text"
+                  id="role"
+                  name="role"
+                  value={membershipData.role}
+                  disabled
+                />
+              </div>
+            </div>
+          </form>
+        </div>
 
-          {/* s1 = "SELECT "
+        <Grid>
+          <Grid container spacing={3}>
+            <TextField
+              id="role"
+              name="role"
+              value={membershipData.role}
+              label="Role"
+              fullWidth
+              autoComplete="0"
+            />
+          </Grid>
+          <Grid container spacing={3}>
+            <TextField
+              id="storageTokensAvailable" // mst + est - ast - bst - sst
+              name="storageTokensAvailable"
+              value={membershipData.storageTokensAvailable}
+              label="Storage Tokens Available"
+              fullWidth
+              autoComplete="0"
+            />
+          </Grid>
+          <Grid container spacing={3}>
+            <TextField
+              id="enlargementTokensAvailable" // eta
+              name="eta"
+              value={membershipData.eta}
+              label="Enlargement Tokens Available"
+              fullWidth
+              autoComplete="0"
+            />
+          </Grid>
+          <Grid container spacing={3}>
+            <TextField
+              id="emailTokensAvailable" // qta
+              name="qta"
+              value={membershipData.qta}
+              label="Email Tokens Available"
+              fullWidth
+              autoComplete="0"
+            />
+          </Grid>
+          <Grid container spacing={3}>
+            <TextField
+              id="venueStorageTokensAvailable" // avs + mve - ves
+              name="availableVenueStorageTokens"
+              value={membershipData.availableVenueStorageTokens}
+              label="Venue Storage Tokens Available"
+              fullWidth
+              autoComplete="0"
+            />
+          </Grid>
+          <Grid container spacing={3}>
+            <TextField
+              id="arrangementsStored" // ast
+              name="ast"
+              value={membershipData.ast}
+              label="Number of Arrangements Stored"
+              fullWidth
+              autoComplete="0"
+            />
+          </Grid>
+          <Grid container spacing={3}>
+            <TextField
+              id="basketsStored" // bst
+              name="bst"
+              value={membershipData.bst}
+              label="Number of Baskets Stored"
+              fullWidth
+              autoComplete="0"
+            />
+          </Grid>
+          <Grid container spacing={3}>
+            <TextField
+              id="scenesStored" // sst
+              name="sst"
+              value={membershipData.sst}
+              label="Number of Scenes Stored"
+              fullWidth
+              autoComplete="0"
+            />
+          </Grid>
+          <Grid container spacing={3}>
+            <TextField
+              id="venueStored" // ves
+              name="ves"
+              value={membershipData.ves}
+              label="Number of Venues Stored"
+              fullWidth
+              autoComplete="0"
+            />
+          </Grid>
+          <Grid container spacing={3}>
+            <TextField
+              id="maxUsers" // mus
+              name="mus"
+              value={membershipData.mus}
+              label="Maximum Users Available For Your Account"
+              fullWidth
+              autoComplete="0"
+            />
+          </Grid>
+          <Grid container spacing={3}>
+            <TextField
+              id="currentUsers" // qty
+              name="qty"
+              value={membershipData.qty}
+              label="Current Users Active On Your Account"
+              fullWidth
+              autoComplete="0"
+            />
+          </Grid>
+          <Grid container spacing={3}>
+            <TextField
+              id="appStoreMonthlyDueDate" // app_store_monthly_due_date
+              name="app_store_monthly_due_date"
+              value={membershipData.app_store_monthly_due_date}
+              label="App Store Monthly Due Date"
+              fullWidth
+              autoComplete=""
+            />
+          </Grid>
+          <Grid container spacing={3}>
+            <TextField
+              id="playStoreMonthlyDueDate" // play_store_monthly_due_date
+              name="play_store_monthly_due_date"
+              value={membershipData.play_store_monthly_due_date}
+              label="Play Store Monthly Due Date"
+              fullWidth
+              autoComplete=""
+            />
+          </Grid>
+          <Grid container spacing={3}>
+            <TextField
+              id="stripeMonthlyDueDate" // stripe_monthly_due_date
+              name="stripe_monthly_due_date"
+              value={membershipData.stripe_monthly_due_date}
+              label="Stripe Monthly Due Date"
+              fullWidth
+              autoComplete=""
+            />
+          </Grid>
+        </Grid>
+        <div className={classes.buttons}>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            onClick={() => {
+              history.push("/");
+            }}
+          >
+            Upgrade
+          </Button>
+        </div>
+
+        {/* s1 = "SELECT "
     s1 += "json_build_object( "
     s1 += "'ast', ast, " # Number of arrangements stored currently
     s1 += "'avs', avs, " # Additional venue storage purchased
@@ -270,7 +290,6 @@ export default () => {
     s1 += "FROM "
     s1 += "membership "
     s1 += "WHERE usr = %(userId)s "  */}
-        </Paper>
       </main>
     </React.Fragment>
   );
