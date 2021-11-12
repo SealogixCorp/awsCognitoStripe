@@ -110,151 +110,242 @@ export default () => {
                 />
               </div>
             </div>
+            <div className="flex flex-wrap -mx-3 mb-6">
+              <div className="w-full px-3 mb-6 md:mb-0">
+                <label
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                  htmlFor="storageTokensAvailable"
+                >
+                  Storage Tokens Available
+                </label>
+                <input
+                  className="appearance-none block w-full bg-gray-100  border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                  type="text"
+                  id="storageTokensAvailable"
+                  name="storageTokensAvailable"
+                  value={membershipData.storageTokensAvailable} // mst + est - ast - bst - sst
+                  disabled
+                />
+              </div>
+            </div>
+            <div className="flex flex-wrap -mx-3 mb-6">
+              <div className="w-full px-3 mb-6 md:mb-0">
+                <label
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                  htmlFor="enlargementTokensAvailable"
+                >
+                  Enlargement Tokens Available
+                </label>
+                <input
+                  className="appearance-none block w-full bg-gray-100  border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                  type="text"
+                  id="enlargementTokensAvailable"
+                  name="eta"
+                  value={membershipData.eta}
+                  disabled
+                />
+              </div>
+            </div>
+            <div className="flex flex-wrap -mx-3 mb-6">
+              <div className="w-full px-3 mb-6 md:mb-0">
+                <label
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                  htmlFor="emailTokensAvailable"
+                >
+                  Email Tokens Available
+                </label>
+                <input
+                  className="appearance-none block w-full bg-gray-100  border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                  type="text"
+                  id="emailTokensAvailable"
+                  name="qta"
+                  value={membershipData.qta}
+                  disabled
+                />
+              </div>
+            </div>
+            <div className="flex flex-wrap -mx-3 mb-6">
+              <div className="w-full px-3 mb-6 md:mb-0">
+                <label
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                  htmlFor="venueStorageTokensAvailable"
+                >
+                  Venue Storage Tokens Available
+                </label>
+                <input
+                  className="appearance-none block w-full bg-gray-100  border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                  type="text"
+                  id="venueStorageTokensAvailable"
+                  name="role"
+                  value={membershipData.availableVenueStorageTokens} // avs + mve - ves
+                  disabled
+                />
+              </div>
+            </div>
+            <div className="flex flex-wrap -mx-3 mb-6">
+              <div className="w-full px-3 mb-6 md:mb-0">
+                <label
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                  htmlFor="arrangementsStored"
+                >
+                  Number of Arrangements Stored
+                </label>
+                <input
+                  className="appearance-none block w-full bg-gray-100  border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                  type="text"
+                  id="arrangementsStored"
+                  name="ast"
+                  value={membershipData.ast}
+                  disabled
+                />
+              </div>
+            </div>
+            <div className="flex flex-wrap -mx-3 mb-6">
+              <div className="w-full px-3 mb-6 md:mb-0">
+                <label
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                  htmlFor="basketsStored"
+                >
+                  Number of Baskets Stored
+                </label>
+                <input
+                  className="appearance-none block w-full bg-gray-100  border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                  type="text"
+                  id="basketsStored"
+                  name="bst"
+                  value={membershipData.bst}
+                  disabled
+                />
+              </div>
+            </div>
+            <div className="flex flex-wrap -mx-3 mb-6">
+              <div className="w-full px-3 mb-6 md:mb-0">
+                <label
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                  htmlFor="scenesStored"
+                >
+                  Number of Scenes Stored
+                </label>
+                <input
+                  className="appearance-none block w-full bg-gray-100  border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                  type="text"
+                  id="scenesStored"
+                  name="sst"
+                  value={membershipData.sst}
+                  disabled
+                />
+              </div>
+            </div>
+            <div className="flex flex-wrap -mx-3 mb-6">
+              <div className="w-full px-3 mb-6 md:mb-0">
+                <label
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                  htmlFor="venueStored"
+                >
+                  Number of Venues Stored
+                </label>
+                <input
+                  className="appearance-none block w-full bg-gray-100  border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                  type="text"
+                  id="venueStored"
+                  name="ves"
+                  value={membershipData.ves}
+                  disabled
+                />
+              </div>
+            </div>
+            <div className="flex flex-wrap -mx-3 mb-6">
+              <div className="w-full px-3 mb-6 md:mb-0">
+                <label
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                  htmlFor="maxUsers"
+                >
+                  Maximum Users Available For Your Account
+                </label>
+                <input
+                  className="appearance-none block w-full bg-gray-100  border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                  type="text"
+                  id="maxUsers"
+                  name="mus"
+                  value={membershipData.mus}
+                  disabled
+                />
+              </div>
+            </div>
+            <div className="flex flex-wrap -mx-3 mb-6">
+              <div className="w-full px-3 mb-6 md:mb-0">
+                <label
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                  htmlFor="currentUsers"
+                >
+                  Current Users Active On Your Account
+                </label>
+                <input
+                  className="appearance-none block w-full bg-gray-100  border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                  type="text"
+                  id="currentUsers"
+                  name="qty"
+                  value={membershipData.qty}
+                  disabled
+                />
+              </div>
+            </div>
+            <div className="flex flex-wrap -mx-3 mb-6">
+              <div className="w-full px-3 mb-6 md:mb-0">
+                <label
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                  htmlFor="appStoreMonthlyDueDate"
+                >
+                  App Store Monthly Due Date
+                </label>
+                <input
+                  className="appearance-none block w-full bg-gray-100  border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                  type="text"
+                  id="appStoreMonthlyDueDate"
+                  name="app_store_monthly_due_date"
+                  value={membershipData.app_store_monthly_due_date}
+                  disabled
+                />
+              </div>
+            </div>
+            <div className="flex flex-wrap -mx-3 mb-6">
+              <div className="w-full px-3 mb-6 md:mb-0">
+                <label
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                  htmlFor="playStoreMonthlyDueDate"
+                >
+                  Play Store Monthly Due Date
+                </label>
+                <input
+                  className="appearance-none block w-full bg-gray-100  border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                  type="text"
+                  id="playStoreMonthlyDueDate"
+                  name="play_store_monthly_due_date"
+                  value={membershipData.play_store_monthly_due_date}
+                  disabled
+                />
+              </div>
+            </div>
+            <div className="flex flex-wrap -mx-3 mb-6">
+              <div className="w-full px-3 mb-6 md:mb-0">
+                <label
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                  htmlFor="stripeMonthlyDueDate"
+                >
+                  Stripe Monthly Due Date
+                </label>
+                <input
+                  className="appearance-none block w-full bg-gray-100  border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                  type="text"
+                  id="stripeMonthlyDueDate"
+                  name="stripe_monthly_due_date"
+                  value={membershipData.stripe_monthly_due_date}
+                  disabled
+                />
+              </div>
+            </div>
           </form>
         </div>
-
-        <Grid>
-          <Grid container spacing={3}>
-            <TextField
-              id="role"
-              name="role"
-              value={membershipData.role}
-              label="Role"
-              fullWidth
-              autoComplete="0"
-            />
-          </Grid>
-          <Grid container spacing={3}>
-            <TextField
-              id="storageTokensAvailable" // mst + est - ast - bst - sst
-              name="storageTokensAvailable"
-              value={membershipData.storageTokensAvailable}
-              label="Storage Tokens Available"
-              fullWidth
-              autoComplete="0"
-            />
-          </Grid>
-          <Grid container spacing={3}>
-            <TextField
-              id="enlargementTokensAvailable" // eta
-              name="eta"
-              value={membershipData.eta}
-              label="Enlargement Tokens Available"
-              fullWidth
-              autoComplete="0"
-            />
-          </Grid>
-          <Grid container spacing={3}>
-            <TextField
-              id="emailTokensAvailable" // qta
-              name="qta"
-              value={membershipData.qta}
-              label="Email Tokens Available"
-              fullWidth
-              autoComplete="0"
-            />
-          </Grid>
-          <Grid container spacing={3}>
-            <TextField
-              id="venueStorageTokensAvailable" // avs + mve - ves
-              name="availableVenueStorageTokens"
-              value={membershipData.availableVenueStorageTokens}
-              label="Venue Storage Tokens Available"
-              fullWidth
-              autoComplete="0"
-            />
-          </Grid>
-          <Grid container spacing={3}>
-            <TextField
-              id="arrangementsStored" // ast
-              name="ast"
-              value={membershipData.ast}
-              label="Number of Arrangements Stored"
-              fullWidth
-              autoComplete="0"
-            />
-          </Grid>
-          <Grid container spacing={3}>
-            <TextField
-              id="basketsStored" // bst
-              name="bst"
-              value={membershipData.bst}
-              label="Number of Baskets Stored"
-              fullWidth
-              autoComplete="0"
-            />
-          </Grid>
-          <Grid container spacing={3}>
-            <TextField
-              id="scenesStored" // sst
-              name="sst"
-              value={membershipData.sst}
-              label="Number of Scenes Stored"
-              fullWidth
-              autoComplete="0"
-            />
-          </Grid>
-          <Grid container spacing={3}>
-            <TextField
-              id="venueStored" // ves
-              name="ves"
-              value={membershipData.ves}
-              label="Number of Venues Stored"
-              fullWidth
-              autoComplete="0"
-            />
-          </Grid>
-          <Grid container spacing={3}>
-            <TextField
-              id="maxUsers" // mus
-              name="mus"
-              value={membershipData.mus}
-              label="Maximum Users Available For Your Account"
-              fullWidth
-              autoComplete="0"
-            />
-          </Grid>
-          <Grid container spacing={3}>
-            <TextField
-              id="currentUsers" // qty
-              name="qty"
-              value={membershipData.qty}
-              label="Current Users Active On Your Account"
-              fullWidth
-              autoComplete="0"
-            />
-          </Grid>
-          <Grid container spacing={3}>
-            <TextField
-              id="appStoreMonthlyDueDate" // app_store_monthly_due_date
-              name="app_store_monthly_due_date"
-              value={membershipData.app_store_monthly_due_date}
-              label="App Store Monthly Due Date"
-              fullWidth
-              autoComplete=""
-            />
-          </Grid>
-          <Grid container spacing={3}>
-            <TextField
-              id="playStoreMonthlyDueDate" // play_store_monthly_due_date
-              name="play_store_monthly_due_date"
-              value={membershipData.play_store_monthly_due_date}
-              label="Play Store Monthly Due Date"
-              fullWidth
-              autoComplete=""
-            />
-          </Grid>
-          <Grid container spacing={3}>
-            <TextField
-              id="stripeMonthlyDueDate" // stripe_monthly_due_date
-              name="stripe_monthly_due_date"
-              value={membershipData.stripe_monthly_due_date}
-              label="Stripe Monthly Due Date"
-              fullWidth
-              autoComplete=""
-            />
-          </Grid>
-        </Grid>
         <div className={classes.buttons}>
           <Button
             variant="contained"
