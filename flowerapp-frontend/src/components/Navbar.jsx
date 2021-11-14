@@ -11,6 +11,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import Link from "@material-ui/core/Link";
 import Button from "@material-ui/core/Button";
+import axios from "axios";
 
 const Navbar = ({ backgroundColor = "bg-gray-900" }) => {
   const history = useHistory();
@@ -47,6 +48,29 @@ const Navbar = ({ backgroundColor = "bg-gray-900" }) => {
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
+  };
+
+  const updateLanguage = async (language) => {
+    try {
+      const user = await Auth.currentAuthenticatedUser();
+      console.log(user.signInUserSession.idToken.jwtToken);
+      const response = await axios.post(
+        "https://api.myflowerarchitect.com/arranger/account/language/update/" +
+          language,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${user.signInUserSession.idToken.jwtToken}`,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "*",
+          },
+        }
+      );
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
@@ -181,14 +205,12 @@ const Navbar = ({ backgroundColor = "bg-gray-900" }) => {
                     href="#"
                     className="text-gray-800 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                   >
-                    Languages
+                    LANGUAGES
                   </a>
 
                   <div className="group inline-block">
                     <button className="outline-none focus:outline-none border px-3 py-1 bg-white rounded-sm flex items-center min-w-32">
-                      <span className="pr-1 font-semibold flex-1">
-                        Dropdown
-                      </span>
+                      <span className="pr-1 font-semibold flex-1">ACCOUNT</span>
                       <span>
                         <svg
                           className="fill-current h-4 w-4 transform group-hover:-rotate-180
@@ -204,11 +226,13 @@ const Navbar = ({ backgroundColor = "bg-gray-900" }) => {
                       className="bg-white border rounded-sm transform scale-0 group-hover:scale-100 absolute 
   transition duration-150 ease-in-out origin-top min-w-32"
                     >
-                      <li className="rounded-sm px-3 py-1 hover:bg-gray-100">
-                        Programming
-                      </li>
-                      <li className="rounded-sm px-3 py-1 hover:bg-gray-100">
-                        DevOps
+                      <li
+                        className="rounded-sm px-3 py-1 hover:bg-gray-100"
+                        onClick={() => {
+                          history.push("/account/profile");
+                        }}
+                      >
+                        PROFILE
                       </li>
                       <li className="rounded-sm relative px-3 py-1 hover:bg-gray-100">
                         <button className="w-full text-left flex items-center outline-none focus:outline-none">
@@ -230,10 +254,7 @@ const Navbar = ({ backgroundColor = "bg-gray-900" }) => {
   min-w-32
   "
                         >
-                          <li className="px-3 py-1 hover:bg-gray-100">
-                            Javascript
-                          </li>
-                          <li className="rounded-sm relative px-3 py-1 hover:bg-gray-100">
+                          {/* <li className="rounded-sm relative px-3 py-1 hover:bg-gray-100">
                             <button className="w-full text-left flex items-center outline-none focus:outline-none">
                               <span className="pr-1 flex-1">Python</span>
                               <span className="mr-auto">
@@ -260,90 +281,137 @@ const Navbar = ({ backgroundColor = "bg-gray-900" }) => {
                                 3+
                               </li>
                             </ul>
+                          </li> */}
+                          <li
+                            className="px-3 py-1 hover:bg-gray-100"
+                            onClick={() => {
+                              updateLanguage("zh");
+                            }}
+                          >
+                            CHINESE
                           </li>
-                          <li className="px-3 py-1 hover:bg-gray-100">Go</li>
-                          <li className="px-3 py-1 hover:bg-gray-100">Rust</li>
+                          <li
+                            className="px-3 py-1 hover:bg-gray-100"
+                            onClick={() => {
+                              updateLanguage("da");
+                            }}
+                          >
+                            DANISH
+                          </li>
+                          <li
+                            className="px-3 py-1 hover:bg-gray-100"
+                            onClick={() => {
+                              updateLanguage("nl");
+                            }}
+                          >
+                            DUTCH
+                          </li>
+                          <li
+                            className="px-3 py-1 hover:bg-gray-100"
+                            onClick={() => {
+                              updateLanguage("en");
+                            }}
+                          >
+                            ENGLISH
+                          </li>
+                          <li
+                            className="px-3 py-1 hover:bg-gray-100"
+                            onClick={() => {
+                              updateLanguage("fa");
+                            }}
+                          >
+                            FARSI(PERSIAN)
+                          </li>
+                          <li
+                            className="px-3 py-1 hover:bg-gray-100"
+                            onClick={() => {
+                              updateLanguage("fi");
+                            }}
+                          >
+                            FINNISH
+                          </li>
+                          <li
+                            className="px-3 py-1 hover:bg-gray-100"
+                            onClick={() => {
+                              updateLanguage("fr");
+                            }}
+                          >
+                            FRENCH
+                          </li>
+                          <li
+                            className="px-3 py-1 hover:bg-gray-100"
+                            onClick={() => {
+                              updateLanguage("de");
+                            }}
+                          >
+                            GERMAN
+                          </li>
+                          <li
+                            className="px-3 py-1 hover:bg-gray-100"
+                            onClick={() => {
+                              updateLanguage("it");
+                            }}
+                          >
+                            ITALIAN
+                          </li>
+                          <li
+                            className="px-3 py-1 hover:bg-gray-100"
+                            onClick={() => {
+                              updateLanguage("ja");
+                            }}
+                          >
+                            JAPANESE
+                          </li>
+                          <li
+                            className="px-3 py-1 hover:bg-gray-100"
+                            onClick={() => {
+                              updateLanguage("ko");
+                            }}
+                          >
+                            KOREAN
+                          </li>
+
+                          <li
+                            className="px-3 py-1 hover:bg-gray-100"
+                            onClick={() => {
+                              updateLanguage("pl");
+                            }}
+                          >
+                            POLISH
+                          </li>
+                          <li
+                            className="px-3 py-1 hover:bg-gray-100"
+                            onClick={() => {
+                              updateLanguage("ru");
+                            }}
+                          >
+                            RUSSIAN
+                          </li>
+                          <li
+                            className="px-3 py-1 hover:bg-gray-100"
+                            onClick={() => {
+                              updateLanguage("es");
+                            }}
+                          >
+                            SPANISH
+                          </li>
+                          <li
+                            className="px-3 py-1 hover:bg-gray-100"
+                            onClick={() => {
+                              updateLanguage("vn");
+                            }}
+                          >
+                            VIETNAMESE
+                          </li>
                         </ul>
                       </li>
-                      <li className="rounded-sm px-3 py-1 hover:bg-gray-100">
-                        Testing
+                      <li
+                        className="rounded-sm px-3 py-1 hover:bg-gray-100"
+                        onClick={handleLogout}
+                      >
+                        LOGOUT
                       </li>
                     </ul>
-                  </div>
-
-                  <div>
-                    <IconButton
-                      aria-label="account of current user"
-                      aria-controls="menu-appbar"
-                      aria-haspopup="true"
-                      onClick={handleMenu}
-                      color="inherit"
-                    >
-                      <AccountCircle />
-                      LANGUAGES
-                    </IconButton>
-                    <Menu
-                      id="menu-appbar"
-                      anchorEl={anchorEl}
-                      anchorOrigin={{
-                        vertical: "top",
-                        horizontal: "right",
-                      }}
-                      keepMounted
-                      transformOrigin={{
-                        vertical: "top",
-                        horizontal: "right",
-                      }}
-                      open={open}
-                      onClose={handleClose}
-                    >
-                      <MenuItem
-                        onClick={() => {
-                          history.push("/account/profile");
-                        }}
-                      >
-                        ENGLISH
-                      </MenuItem>
-                      <MenuItem onClick={handleLogout}>Logout</MenuItem>
-                    </Menu>
-                  </div>
-
-                  <div>
-                    <IconButton
-                      aria-label="account of current user"
-                      aria-controls="menu-appbar"
-                      aria-haspopup="true"
-                      onClick={handleMenu}
-                      color="inherit"
-                    >
-                      <AccountCircle />
-                    </IconButton>
-                    <Menu
-                      id="menu-appbar"
-                      anchorEl={anchorEl}
-                      anchorOrigin={{
-                        vertical: "top",
-                        horizontal: "right",
-                      }}
-                      keepMounted
-                      transformOrigin={{
-                        vertical: "top",
-                        horizontal: "right",
-                      }}
-                      open={open}
-                      onClose={handleClose}
-                    >
-                      <MenuItem
-                        onClick={() => {
-                          history.push("/account/profile");
-                        }}
-                      >
-                        {" "}
-                        My Account
-                      </MenuItem>
-                      <MenuItem onClick={handleLogout}>Logout</MenuItem>
-                      <MenuItem onClick={handleLogout}>Language</MenuItem>
-                    </Menu>
                   </div>
                 </div>
               </div>

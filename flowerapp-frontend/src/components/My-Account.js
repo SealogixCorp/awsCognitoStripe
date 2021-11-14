@@ -181,7 +181,17 @@ export default () => {
                 >
                   Gender
                 </label>
-                <input
+                <select
+                  className="appearance-none block w-full bg-gray-100  border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                  id="gender"
+                  name="gender"
+                  value={profile.gender}
+                  onChange={handleChange}
+                >
+                  <option value="M">Male</option>
+                  <option value="F">Female</option>
+                </select>
+                {/* <input
                   className="appearance-none block w-full bg-gray-100  border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                   type="text"
                   placeholder="Jane"
@@ -189,7 +199,7 @@ export default () => {
                   name="gender"
                   value={profile.gender}
                   onChange={handleChange}
-                />
+                /> */}
               </div>
             </div>
             <div className="flex flex-wrap -mx-3 mb-6">
