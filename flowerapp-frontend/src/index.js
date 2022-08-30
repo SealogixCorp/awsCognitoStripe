@@ -6,14 +6,16 @@ import { ToastProvider } from "react-toast-notifications";
 import "./index.css";
 import './styles/tailwind.css';
 
+
 import App from "./App";
 import config from "./config";
 import * as serviceWorker from "./serviceWorker";
 
+
 Amplify.configure({
   Auth: {
     // REQUIRED - Amazon Cognito Identity Pool ID
-    identityPoolId: config.cognito.USER_POOL_ID,
+    identityPoolId: config.cognito.IDENTITY_POOL_ID,
     // REQUIRED - Amazon Cognito Region
     region: config.cognito.REGION,
     // OPTIONAL - Amazon Cognito User Pool ID
@@ -22,6 +24,7 @@ Amplify.configure({
     userPoolWebClientId: config.cognito.APP_CLIENT_ID
   }
 });
+
 ReactDOM.render(
   <React.StrictMode>
     <ToastProvider>

@@ -39,6 +39,8 @@ const Navbar = ({ backgroundColor = "bg-gray-900" }) => {
   };
   const handleLogout = () => {
     Auth.signOut();
+    localStorage.removeItem("identity_id");
+    localStorage.removeItem("JWT_TOKEN_KEY");
     history.push("/signin");
   };
 

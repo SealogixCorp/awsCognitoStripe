@@ -92,20 +92,19 @@ export default () => {
   if (user === null) {
     return null;
   }
-  console.log("tis one");
-  console.log(user.attributes);
+
   return (
     <React.Fragment>
       <NavBar backgroundColor="bg-gray-100" />
       <div className="container mx-auto my-2">
-        <div class="lg:text-center my-10">
-          <h2 class="text-base text-indigo-600 font-semibold tracking-wide uppercase">
+        <div className="lg:text-center my-10">
+          <h2 className="text-base text-indigo-600 font-semibold tracking-wide uppercase">
             Flower Architect.
           </h2>
-          <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+          <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
             Design you own Flower Arrangements
           </p>
-          <p class="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
+          <p className="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
             Buy a membership now or sign-up for a limited free trial. Try the
             FLOWERPUZZLES game created with FlowerArchitect.
           </p>
@@ -151,14 +150,13 @@ export default () => {
                     <div className="description p-2 text-white w-full ">
                       <div className="flex flex-row items-center justify-self-start">
                         <h3
-                          className="mx-auto text-base font-semibold mb-2 text-center  text-white  transform transition duration-150 ease-in-out"
+                          className="mx-auto text-base font-semibold mb-2 text-center text-xl font-semibold mr-4  text-white  transform transition duration-150 ease-in-out"
                           onClick={(e) => {
                             e.preventDefault();
                             console.log(e);
                             setActiveAccordion(deal.id);
                             //e.target.nextSibling.classList.toggle("hidden");
                           }}
-                          className="text-xl font-semibold mr-4"
                         >
                           {deal.title}
                         </h3>
@@ -189,9 +187,9 @@ export default () => {
                               viewBox="0 0 24 24"
                             >
                               <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
                                 d="M5 13l4 4L19 7"
                               ></path>
                             </svg>
