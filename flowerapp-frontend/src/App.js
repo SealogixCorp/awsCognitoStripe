@@ -26,10 +26,12 @@ const App = () => {
   useEffect(() => {
     const timer = setInterval(async () => {
       const user = await Auth.currentAuthenticatedUser();
+      const credentials = await Auth.currentCredentials();
       localStorage.setItem(
         "JWT_TOKEN_KEY",
         `${user.keyPrefix}.${user.username}.idToken`
       );
+      localStorage.setItem('identity_id',JSON.stringify(credentials));
     }, 3300000);
     return () => clearInterval(timer);
   }, []);
