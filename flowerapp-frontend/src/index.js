@@ -1,5 +1,7 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from 'react-dom/client';
+
+
 import Amplify from "aws-amplify";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { ToastProvider } from "react-toast-notifications";
@@ -24,16 +26,25 @@ Amplify.configure({
     userPoolWebClientId: config.cognito.APP_CLIENT_ID
   }
 });
-
-ReactDOM.render(
+const container = document.getElementById('root');
+const root = createRoot(container);
+root.render(
   <React.StrictMode>
-    <ToastProvider>
+   <ToastProvider>
       <CssBaseline />
       <App />
     </ToastProvider>
-  </React.StrictMode>,
-  document.getElementById("root")
+  </React.StrictMode>
 );
+// ReactDOM.render(
+//   <React.StrictMode>
+//     <ToastProvider>
+//       <CssBaseline />
+//       <App />
+//     </ToastProvider>
+//   </React.StrictMode>,
+//   document.getElementById("root")
+// );
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
