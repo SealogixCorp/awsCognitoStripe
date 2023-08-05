@@ -11,6 +11,7 @@ import Welcome from "./components/auth/Welcome";
 import RequireAuth from "./components/auth/Require-auth";
 import ResetPassword from "./components/auth/Reset-password";
 import MyAccount from "./components/My-Account";
+import Delete from "./components/Delete";
 import MyGroups from "./components/My-groups";
 import EditGroup from "./components/groups/Edit";
 import CreateGroup from "./components/groups/Create";
@@ -48,9 +49,9 @@ const App = () => {
           <Route path="/reset-password" exact component={ResetPassword} />
           <Route path="/" exact={true} component={RequireAuth(Home)} />
           <Route path="/account/profile" exact component={RequireAuth(MyAccount)} />
+           <Route path="/account/delete" exact component={RequireAuth(Delete)} />
           <Route path="/my-groups" exact component={RequireAuth(MyGroups)} />
           <Route path="/account/membership" exact component={RequireAuth(Membership)} />
-          
           <Route path="/group/:id" exact component={RequireAuth(Group)} />
           <Route path="/checkout/:id" exact component={RequireAuth(CheckoutForm)} />
           <Route

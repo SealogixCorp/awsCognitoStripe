@@ -1,24 +1,13 @@
 import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Auth } from "aws-amplify";
-import { makeStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import MenuItem from "@material-ui/core/MenuItem";
-import Menu from "@material-ui/core/Menu";
-import Link from "@material-ui/core/Link";
-import Button from "@material-ui/core/Button";
 import axios from "axios";
 
 const Navbar = ({ backgroundColor = "bg-gray-900" }) => {
   const history = useHistory();
   const [auth, setAuth] = React.useState(null);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [, setAnchorEl] = React.useState(null);
 
-  const open = Boolean(anchorEl);
   const isAuthincated = async () => {
     try {
       const user = await Auth.currentAuthenticatedUser();
@@ -34,9 +23,7 @@ const Navbar = ({ backgroundColor = "bg-gray-900" }) => {
     isAuthincated();
   }, []);
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+
   const handleLogout = () => {
     Auth.signOut();
     localStorage.removeItem("identity_id");
@@ -44,19 +31,11 @@ const Navbar = ({ backgroundColor = "bg-gray-900" }) => {
     history.push("/signin");
   };
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
 
   const updateLanguage = async (language) => {
     try {
       const user = await Auth.currentAuthenticatedUser();
-      console.log(user.signInUserSession.idToken.jwtToken);
-      const response = await axios.post(
+      await axios.post(
         "https://api.myflowerarchitect.com/arranger/account/language/update/" +
           language,
         {},
@@ -234,7 +213,15 @@ const Navbar = ({ backgroundColor = "bg-gray-900" }) => {
                           history.push("/account/profile");
                         }}
                       >
-                        PROFILE
+                        Profile
+                      </li>
+                          <li
+                        className="rounded-sm px-3 py-1 hover:bg-gray-100"
+                        onClick={() => {
+                          history.push("/account/delete");
+                        }}
+                      >
+                        Delete Profile
                       </li>
                       <li className="rounded-sm relative px-3 py-1 hover:bg-gray-100">
                         <button className="w-full text-left flex items-center outline-none focus:outline-none">
