@@ -3,7 +3,7 @@ import { Auth } from 'aws-amplify';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 import Avatar from '@material-ui/core/Avatar';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -54,7 +54,7 @@ export default () => {
 	let { id } = useParams();
 
 	const { addToast } = useToasts();
-	const history = useHistory();
+	const navigate = useNavigate();
 	const [ group, setGroup ] = React.useState(null);
 	const [ loading, setLoading ] = React.useState(true);
 	const classes = useStyles();

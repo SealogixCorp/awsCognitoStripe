@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Auth } from "aws-amplify";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useToasts } from "react-toast-notifications";
 import TextField from "@material-ui/core/TextField";
 import ReCAPTCHA from "react-google-recaptcha";
@@ -10,7 +10,7 @@ import NavBar from "../Appbar";
 
 export default () => {
   const { addToast } = useToasts();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -65,7 +65,7 @@ export default () => {
           autoDismissTimeout: 6000
         }
       );
-      history.push("/signin");
+      navigate("/signin");
     } catch (error) {
       let err = null;
       !error.message ? (err = { message: error }) : (err = error);
@@ -196,7 +196,7 @@ export default () => {
              
                 <button className="bg-transparent text-blue-400 m-1 "
                       onClick={() => {
-                        history.push("signin");
+                        navigate("signin");
                       }}>
                   Already have an account? Sign in
                 </button>

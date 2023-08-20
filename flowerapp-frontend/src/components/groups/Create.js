@@ -2,7 +2,7 @@ import React from "react";
 import { Auth } from "aws-amplify";
 import axios from "axios";
 import { useFormik } from "formik";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useToasts } from "react-toast-notifications";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
@@ -106,7 +106,7 @@ export default () => {
           PlacementType: "top-right",
           autoDismissTimeout: 6000
         });
-        history.push("/my-groups");
+        navigate("/my-groups");
       } catch (e) {
         console.log(e);
       }
@@ -114,7 +114,7 @@ export default () => {
   });
 
   const { addToast } = useToasts();
-  const history = useHistory();
+  const navigate = useNavigate();
   const classes = useStyles();
 
   return (

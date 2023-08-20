@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Auth } from "aws-amplify";
 import { useToasts } from "react-toast-notifications";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import NavBar from "../Navbar";
 
 export default () => {
   const { addToast } = useToasts();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [forgotPassword, setForgotPassword] = useState(false);
   const [varifyHuman, setVarifyHuman] = useState(false);
   const [password, setPassword] = useState("");
@@ -51,7 +51,7 @@ export default () => {
       const credentials = await Auth.currentCredentials();
       localStorage.setItem("JWT_TOKEN_KEY",`${user.keyPrefix}.${user.username}.idToken`);
       localStorage.setItem('identity_id',JSON.stringify(credentials));
-      history.push("/");
+      navigate("/");
     } catch (error) {
       let err = null;
       !error.message ? (err = { message: error }) : (err = error);
@@ -84,7 +84,7 @@ export default () => {
           autoDismissTimeout: 6000
         }
       );
-      history.push("/reset-password");
+      navigate("/reset-password");
     } catch (error) {
       let err = null;
       !error.message ? (err = { message: error }) : (err = error);
@@ -209,7 +209,7 @@ export default () => {
                     </button>
                     <button className="bg-transparent text-blue-400 m-1 "
                       onClick={() => {
-                        history.push("signup");
+                       navigate("signup");
                       }}
                     >{"Don't have an account? Sign Up"}
                     </button>

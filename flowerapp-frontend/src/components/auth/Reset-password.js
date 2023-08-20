@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Auth } from "aws-amplify";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Avatar from "@material-ui/core/Avatar";
 import { useToasts } from "react-toast-notifications";
 import Button from "@material-ui/core/Button";
@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
 
 export default () => {
   const { addToast } = useToasts();
-  const history = useHistory();
+  const navigate = useNavigate();
   const classes = useStyles();
   const [code, setCode] = useState("");
   const [password, setPassword] = useState("");
@@ -62,7 +62,7 @@ export default () => {
         PlacementType: "top-right",
         autoDismissTimeout: 6000
       });
-      history.push("/");
+      navigate("/");
     } catch (error) {
       let err = null;
       !error.message ? (err = { message: error }) : (err = error);

@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Auth } from "aws-amplify";
 import axios from "axios";
 
 const Navbar = ({ backgroundColor = "bg-gray-900" }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [auth, setAuth] = React.useState(null);
   const [, setAnchorEl] = React.useState(null);
 
@@ -28,7 +28,7 @@ const Navbar = ({ backgroundColor = "bg-gray-900" }) => {
     Auth.signOut();
     localStorage.removeItem("identity_id");
     localStorage.removeItem("JWT_TOKEN_KEY");
-    history.push("/signin");
+    navigate("/signin");
   };
 
 
@@ -210,7 +210,7 @@ const Navbar = ({ backgroundColor = "bg-gray-900" }) => {
                       <li
                         className="rounded-sm px-3 py-1 hover:bg-gray-100"
                         onClick={() => {
-                          history.push("/account/profile");
+                          navigate("/account/profile");
                         }}
                       >
                         Profile
@@ -218,7 +218,7 @@ const Navbar = ({ backgroundColor = "bg-gray-900" }) => {
                           <li
                         className="rounded-sm px-3 py-1 hover:bg-gray-100"
                         onClick={() => {
-                          history.push("/account/delete");
+                          navigate("/account/delete");
                         }}
                       >
                         Delete Profile
@@ -408,7 +408,7 @@ const Navbar = ({ backgroundColor = "bg-gray-900" }) => {
               <button
                 className="text-gray-800 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                 onClick={() => {
-                  history.push("/signin");
+                  navigate("/signin");
                 }}
               >
                 Login

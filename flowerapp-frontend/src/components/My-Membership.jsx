@@ -6,7 +6,7 @@ import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Navbar from "./Navbar";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Auth } from "aws-amplify";
 import axios from "axios";
 <Navbar backgroundColor="bg-gray-100" />;
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default () => {
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [membershipData, setMembershipData] = useState();
   useEffect(() => {
     const getMembershipData = async () => {
@@ -352,7 +352,7 @@ export default () => {
             color="primary"
             className={classes.button}
             onClick={() => {
-              history.push("/");
+              useNavigate("/");
             }}
           >
             Upgrade

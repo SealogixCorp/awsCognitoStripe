@@ -9,7 +9,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import Link from "@material-ui/core/Link";
 import Button from "@material-ui/core/Button";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Auth } from "aws-amplify";
 
 const useStyles = makeStyles(theme => ({
@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
 
 export default () => {
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [auth, setAuth] = React.useState(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -68,7 +68,7 @@ export default () => {
   };
   const handleLogout = () => {
     Auth.signOut();
-    history.push("/signin");
+    navigate("/signin");
   };
 
   const handleClick = event => {
@@ -113,7 +113,7 @@ export default () => {
               </Link>
               <Link
                 onClick={() => {
-                  history.push("/my-groups");
+                  navigate("/my-groups");
                 }}
                 variant="button"
                 color="textPrimary"
@@ -123,7 +123,7 @@ export default () => {
               </Link>
               <Link
                 onClick={() => {
-                  history.push("/group/create");
+                  navigate("/group/create");
                 }}
                 variant="button"
                 color="textPrimary"
@@ -167,7 +167,7 @@ export default () => {
               >
                 <MenuItem
                   onClick={() => {
-                    history.push("/my-profile");
+                    navigate("/my-profile");
                   }}
                 >
                   Profile
@@ -180,7 +180,7 @@ export default () => {
         ) : (
           <Button
             onClick={() => {
-              history.push("/signin");
+              navigate("/signin");
             }}
           >
             LOGIN

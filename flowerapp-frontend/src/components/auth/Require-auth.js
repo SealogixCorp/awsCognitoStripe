@@ -1,35 +1,30 @@
-//HoC for check authentication
-//HoC for check authentication
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import { Auth } from "aws-amplify";
+import { useNavigate } from "react-router-dom";
 
-export default ComposedComponent => {
-  class RequireAuth extends Component {
-    async componentWillMount() {
-      try {
-        const user = await Auth.currentAuthenticatedUser();
-        console.log(user);
-        if (!user) {
-          this.props.history.push("/signin");
-        }
-      } catch (e) {
-        this.props.history.push("/signin");
-      }
-    }
-    async componentWillUpdate() {
-      try {
-        const user = await Auth.currentAuthenticatedUser();
-        if (!user) {
-          this.props.history.push("/signin");
-        }
-      } catch (e) {
-        this.props.history.push("/signin");
-      }
-    }
+const RequireAuth = (ComposedComponent) => {
+  const WrapperComponent = (props) => {
+    const navigate = useNavigate();
 
-    render() {
-      return <ComposedComponent {...this.props} />;
-    }
-  }
-  return RequireAuth;
+    useEffect(() => {
+      const checkAuthentication = async () => {
+        try {
+          const user = await Auth.currentAuthenticatedUser();
+          if (!user) {
+            navigate("/signin");
+          }
+        } catch (e) {
+          navigate("/signin");
+        }
+      };
+
+      checkAuthentication();
+    }, [navigate]);
+
+    return <ComposedComponent {...props} />;
+  };
+
+  return WrapperComponent();
 };
+
+export default RequireAuth;

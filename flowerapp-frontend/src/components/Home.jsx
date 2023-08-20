@@ -1,16 +1,9 @@
 import React, { useEffect, useState } from "react";
-import StripeCheckout from "react-stripe-checkout";
-import Button from "@material-ui/core/Button";
-import { useHistory } from "react-router-dom";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import CardHeader from "@material-ui/core/CardHeader";
-import Grid from "@material-ui/core/Grid";
-import StarIcon from "@material-ui/icons/StarBorder";
+
+import { useNavigate } from "react-router-dom";
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
-import { makeStyles } from "@material-ui/core/styles";
+
 
 import axios from "axios";
 import NavBar from "./Navbar";
@@ -33,7 +26,7 @@ function Copyright() {
 }
 
 export default () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [user, setUser] = useState(null);
   const [product, setProduct] = useState({
@@ -60,13 +53,12 @@ export default () => {
     );
     const { status } = response.data;
     if (status === "succeeded") {
-      console.log("Success! Check email for details");
+
     } else {
       console.log("Something went wrong");
     }
   }
   async function createGroup() {
-    console.log("test");
     const user = await Auth.currentAuthenticatedUser();
     console.log(user.signInUserSession.idToken.jwtToken);
     const response = await axios.post(
@@ -87,7 +79,6 @@ export default () => {
         },
       }
     );
-    console.log(response);
   }
   if (user === null) {
     return null;
@@ -203,7 +194,7 @@ export default () => {
                       className="w-2/3 text-center rounded-lg bg-white px-4 py-2 text-base font-semibold font-display  hover:text-teal-500 focus:outline-none focus:shadow-outline"
                       onClick={(e) => {
                         e.preventDefault();
-                        history.push(`/checkout/${deal.id}`);
+                        navigate(`/checkout/${deal.id}`);
                       }}
                     >
                       BUY

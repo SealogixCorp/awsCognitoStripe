@@ -1,5 +1,5 @@
 import React,{useEffect} from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import {
@@ -96,7 +96,7 @@ const useStyles = makeStyles(theme => ({
 
 export default ()=> {
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
  const [page, setPage] = React.useState(0);
  const [groups, setGroups] = React.useState(null);
  const [loading, setLoading] = React.useState(true);
@@ -170,7 +170,7 @@ const renderCell = (column, value,row )=>{
       <Button
         onClick={()=>{
           console.log(row._id);
-        history.push(`group/edit/${row._id}`)
+        navigate(`group/edit/${row._id}`)
         }}
         color="primary"
         className={classes.submit}

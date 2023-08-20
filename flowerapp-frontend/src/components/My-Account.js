@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Navbar from "./Navbar";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Auth } from "aws-amplify";
 import axios from "axios";
 
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default () => {
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [profile, setProfile] = useState();
   const [role, setRole] = useState();
   useEffect(() => {
@@ -126,7 +126,7 @@ export default () => {
                   <button
                     className="p-4 rounded-sm bg-blue-700 text-white"
                     onClick={() => {
-                      history.push("/");
+                     navigate("/");
                     }}
                   >
                     Upgrade

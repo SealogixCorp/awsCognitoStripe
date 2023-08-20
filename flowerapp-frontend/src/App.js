@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Auth } from "aws-amplify";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import {loadStripe} from '@stripe/stripe-js';
 import {Elements} from '@stripe/react-stripe-js';
 import Home from "./components/Home";
@@ -39,30 +39,31 @@ const App = () => {
   return (
     <React.Fragment>
 <Elements stripe={stripePromise}>
-      <BrowserRouter>
-        <Switch>
-          <Route path="/signup" exact component={Signup} />
-          <Route path="/signin" exact component={SignIn} />
-          <Route path="/welcome" exact component={Welcome} />
-          <Route path="/welcome" exact component={Welcome} />
-          <Route path="/group/create" exact component={CreateGroup} />
-          <Route path="/reset-password" exact component={ResetPassword} />
-          <Route path="/" exact={true} component={RequireAuth(Home)} />
-          <Route path="/account/profile" exact component={RequireAuth(MyAccount)} />
-           <Route path="/account/delete" exact component={RequireAuth(Delete)} />
-          <Route path="/my-groups" exact component={RequireAuth(MyGroups)} />
-          <Route path="/account/membership" exact component={RequireAuth(Membership)} />
-          <Route path="/group/:id" exact component={RequireAuth(Group)} />
-          <Route path="/checkout/:id" exact component={RequireAuth(CheckoutForm)} />
+ 
+        <Routes>
+        <Route path="/" exact={true} element={RequireAuth(Home )} />
+          <Route path="/signup" exact element={<Signup/>} />
+          <Route path="/signin" exact element={<SignIn/>} />
+          <Route path="/welcome" exact element={<Welcome/>} />
+          <Route path="/welcome" exact element={<Welcome/>} />
+          <Route path="/group/create" exact element={<CreateGroup/>} />
+          <Route path="/reset-password" exact element={<ResetPassword/>} />
+          
+          <Route path="/account/profile" exact element={RequireAuth(MyAccount)} />
+           <Route path="/account/delete" exact element={RequireAuth(Delete)} />
+          <Route path="/my-groups" exact element={RequireAuth(MyGroups)} />
+          <Route path="/account/membership" exact element={RequireAuth(Membership)} />
+          <Route path="/group/:id" exact element={RequireAuth(Group)} />
+          <Route path="/checkout/:id" exact element={RequireAuth(CheckoutForm)} />
           <Route
             path="/group/edit/:id"
             exact
-            component={RequireAuth(EditGroup)}
+            element={RequireAuth(EditGroup)}
           />
 
-          <Route component={() => <h1>404</h1>} />
-        </Switch>
-      </BrowserRouter>
+          {/* <Route element={() => (<h1>404</h1>)} /> */}
+        </Routes>
+ 
       </Elements>
     </React.Fragment>
   );

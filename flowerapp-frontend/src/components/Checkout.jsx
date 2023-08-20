@@ -2,14 +2,10 @@
 import React, {useState, useEffect} from 'react';
 import {CardElement,  useElements, useStripe} from '@stripe/react-stripe-js';
 
-import { Auth } from 'aws-amplify';
-import { useParams, useHistory } from 'react-router-dom';
-import axios from 'axios';
-import { useToasts } from 'react-toast-notifications';
-import Avatar from '@material-ui/core/Avatar';
+import { useParams } from 'react-router-dom';
+
+
 import CssBaseline from '@material-ui/core/CssBaseline';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import NavBar from './Navbar';
@@ -19,7 +15,6 @@ import { monthlyDeal, arrangementDeals } from "../core/products";
 import {createSubscription} from "../core/utils";
 
 const deals = [...monthlyDeal, ...arrangementDeals];
-console.log(deals);
 const useStyles = makeStyles((theme) => ({
 	layout: {
 		width: 'auto',
@@ -153,7 +148,6 @@ const ResetButton = ({onClick}) => (
 const CheckoutForm = () => {
   const stripe = useStripe();
   const elements = useElements();
-const history = useHistory();
 const [deal, setDeal] = useState(null);
   const [error, setError] = useState(null);
   const [cardComplete, setCardComplete] = useState(false);
