@@ -1,6 +1,21 @@
 @tailwind base;
 
+
+
 @tailwind components;
+
+.blue-card{
+  background-color: #0078f2
+}
+.yellow-card{
+  background-color: #ff7f00
+}
+.green-card{
+  background-color: #7ca429
+}
+.red-card{
+  background-color: #cd3301
+}
 
 @tailwind utilities;
 

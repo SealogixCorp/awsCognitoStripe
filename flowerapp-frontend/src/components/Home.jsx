@@ -11,6 +11,7 @@ import Footer from "./Footer";
 import { Auth } from "aws-amplify";
 //import {stripePromise} from "../core/stripe"
 import { monthlyDeal, arrangementDeals } from "../core/products";
+import { PricingTable } from "./pricingtable/PricingTable";
 
 function Copyright() {
   return (
@@ -100,110 +101,151 @@ export default () => {
             FLOWERPUZZLES game created with FlowerArchitect.
           </p>
         </div>
+      
+          <PricingTable />
+    <div className="p-6 m-4 border rounded shadow text-xl ">
+ 
+    Free (App Store and Play Store Versions Only)
+    <br />
+    {"  "}- Guided Instructions to create a<br />
+    {"        "}1.) A flower ball arrangement
+    <br />
+    {"        "}2.) A wristlet Corsage.
+    <br />
+    {"        "}3.) Mixed Flower Vase Arrangement (Chose from 3 color schemes)
+    <br />
+    {"  "}- Baskets - A pre defined basket of flower for each arrangement above
+    <br />
+    {"  "}- Share -{"  "}share Your arrangement with your friends or send to
+    Pinterest
+    <br />
+    <br />
+    Basic - $9.99 per month, 109.99 per year
+    <br />
+    Month
+    <br />
+    Year https://buy.stripe.com/fZe5nu8e85yO7Zu7st
+    <br />
+    <br />
+    {"  "}- Flower Library - full access to flower image database over 1800
+    flowers and thousands of embellishments (vases, containers, birds,
+    butterflies, jewels, feathers, fruit, etc)
+    <br />
+    {"  "}- Samples - basic arrangement &amp; basket samples library (Vase,
+    wristlet, bridal and few more types)
+    <br />
+    {"  "}- 10 Storage Tokens -{"  "}each storage token allows for storage of
+    one basket or arrangement as long as you membership is current
+    <br />
+    {"  "}- 1 Enlargement Token - sends to Zenfolio photographers website and
+    enlarge to 300dpi and download (Also store to buy prints, oils, t-shirts,
+    etc) (one time use)
+    <br />
+    {"  "}- Share -{"  "}share Your arrangement with your friends or send to
+    Pinterest
+    <br />
+    <br />
+    Enhanced - $14.99 per month, 164.99 per year
+    <br />
+    {"  "}- Flower Library - full access to flower image database over 1800
+    flowers and thousands of embellishments (vases, containers, birds,
+    butterflies, jewels, feathers, fruit, etc)
+    <br />
+    {"  "}- Samples - Full arrangement &amp; basket samples library (Vase,
+    wristlet, bridal and few more types)
+    <br />
+    {"  "}- 50 Storage Tokens. each storage token allows for storage of one
+    basket,{"  "}arrangement or scene{"  "}as long as you membership is current
+    <br />
+    {"  "}- Collages - Access to pre-defined color coordinated flower Collages
+    with associated baskets
+    <br />
+    {"  "}- 4 Storage Tokens for high Resolution Venue Background Images for
+    your scenes
+    <br />
+    {"  "}- Scenes - ability to Create Scenes with your background image and
+    your arrangements placed in scene. upload and store 10{"  "}background
+    images (venues ){"  "}as long as you membership is current
+    <br />
+    {"  "}- 2 Enlargement Tokens - sends to Zenfolio photographers website and
+    enlarge to 300dpi and download (Also store to buy prints, oils, t-shirts,
+    etc) (one time use) refesh monthly
+    <br />
+    {"  "}- Shape Aid Templates - 22 Templates To layout on the canvas to assist
+    in the layout of your flower arrangements
+    <br />
+    {"  "}- Share -{"  "}share Your arrangement with your friends or send to
+    Pinterest
+    <br />
+    <br />
+    Designer (Recommended for Brides) $19.99 per month, $219.99 per year
+    <br />
+    {"  "}- Flower Library - full access to flower image database over 1800
+    flowers and thousands of embellishments (vases, containers, birds,
+    butterflies, jewels, feathers, fruit, etc)
+    <br />
+    {"  "}- Samples - full samples library of arrangements and baskets grouped
+    by (vase arrangement, bridal bouquet, wristlet, tropical, wildflower, etc.)
+    <br />
+    {"  "}- 200 Storage Tokens. each storage token allows for storage of one
+    basket,{"  "}one arrangement one scene, or one custom image{"  "}as long as
+    you membership is current
+    <br />
+    {"  "}- 10 Storage Tokens for high Resolution Venue Background Images for
+    your scenes
+    <br />
+    {"  "}- Scenes - ability to Create Scenes with your background image and
+    your arrangements placed in scene. upload and store 10{"  "}background
+    images (venues ){"  "}as long as you membership is current
+    <br />
+    {"  "}- Garlands - ability to Create Garlands in Scenes utilizing flowers,
+    arrangements, and extras(butterflys, fruit, jewels, etc.)
+    <br />
+    {"  "}- 4 Enlargement Tokens - sends to Zenfolio photographers website and
+    enlarge to 300dpi and download (Also store to buy prints, oils, t-shirts,
+    etc) (one time user) refresh monthly
+    <br />
+    {"  "}- Groups - Ability to create groups and invite friends and share you
+    arrangements, baskets, and scenes
+    <br />
+    {"  "}- 5 Quotations - Ability to send emails with quotation PDF request pdf
+    show your arrangement, associated flower list and your instructions (card,
+    vase, size, etc) (one time use) (refresh montlyl)
+    <br />
+    {"  "}- Color Wheel{"  "}- search for flower that match color wheel
+    <br />
+    {"  "}- Collages - Access to full pre-defined color coordinated flower
+    Collages with associated baskets
+    <br />
+    {"  "}- Flower Data Library - Data library for each flower category (200+)
+    (seasonal availability, relative cost, vase life, shape, texture, etc.)
+    <br />
+    {"  "}- Menu Driven search of flower database by example from menu dropdowns
+    <br />
+    {"  "}- Share -{"  "}share Your arrangement with your friends or send to
+    Pinterest
+    <br />
+    <br />
+    Extras
+    <br />
+    {"   "}Storage Tokens - 25 extra Tokens for more storage to add to your
+    membership (each token can be used to store a basket, arrangement, image, or
+    scene for $9.99 dollars
+    <br />
+    {"   "}Enlargement Tokens- 10 1 time use for $4.99 dollars sends to Zenfolio
+    photographers website and enlarge to 300dpi and download (Also store to buy
+    prints, oils, t-shirts, etc) (one time use)
+    <br />
+    {"   "}Venue Tokens - store extra venue images with your membership 10 for a
+    $4.99 dollars
+    <br />
+    {"   "}Quotation Tokens - extra 1 time use email/quotation tokens 50 for a
+    $4.99 dollars
+    <br />
+    <br />
+    yearly prices (monthly price times 11) one month free
 
-        <div className="flex flex-wrap items-start justify-center py-4 pt-0">
-          {[...monthlyDeal, ...arrangementDeals]
-            .filter((product) => {
-              return !(
-                product.type === user.attributes["custom:role"] ||
-                (product.type === "basic" &&
-                  user.attributes["custom:role"] === "club") ||
-                (product.type === "basic" &&
-                  user.attributes["custom:role"] === "designer") ||
-                (product.type === "club" &&
-                  user.attributes["custom:role"] === "designer")
-              );
-            })
-            .map((deal, key) => (
-              <div
-                className="w-full transform  p-2 md:w-1/2 lg:w-1/4 plan-card"
-                key={key}
-              >
-                <label className="flex flex-col  transform  rounded-lg shadow-2xl group relative cursor-pointer hover:shadow-2xl hover:bg-blue-500">
-                  <div className="w-full px-4 py-6 rounded-t-lg card-section-1 border-t-2 border-pink-500">
-                    <h3 className="mx-auto text-base font-semibold mb-2 text-center  text-blue-500 group-hover:text-white hover:bg-blue-500 transform transition duration-150 ease-in-out">
-                      {deal.title}
-                    </h3>
-
-                    <p className="text-5xl font-bold text-center group-hover:text-white hover:bg-blue-500 text-blue-500">
-                      ${deal.price.split(".")[0]}.
-                      <span className="text-3xl">
-                        {deal.price.split(".")[1]}
-                      </span>
-                    </p>
-                    <p className="text-xs text-center uppercase group-hover:text-white hover:bg-blue-500 text-blue-500">
-                      {deal.paymentType === "recurring"
-                        ? "Monthly"
-                        : "One time"}
-                    </p>
-                  </div>
-                  <div className="flex flex-col items-center justify-center w-full h-full py-6 rounded-b-lg bg-blue-500 hover:bg-blue-600 ">
-                    <div className="description p-2 text-white w-full ">
-                      <div className="flex flex-row items-center justify-self-start">
-                        <h3
-                          className="mx-auto text-base font-semibold mb-2 text-center text-xl font-semibold mr-4  text-white  transform transition duration-150 ease-in-out"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            console.log(e);
-                            setActiveAccordion(deal.id);
-                            //e.target.nextSibling.classList.toggle("hidden");
-                          }}
-                        >
-                          {deal.title}
-                        </h3>
-                        {/*
-          <div className="rounded-full bg-purple-600 text-gray-100 mr-3"><span className="font-semibold p-3">website</span></div>
-          <div className="rounded-full bg-green-600 text-gray-100"><span className="font-semibold p-3">free</span></div>
-          */}
-                      </div>
-                      <p>short description</p>
-                    </div>
-                    <hr className="mb-4 w-full border-blue-400"></hr>
-
-                    <ul
-                      className={`${
-                        deal.id === activeAccordion ? "" : "hidden"
-                      } `}
-                    >
-                      {deal.description.map((des, key) => (
-                        <li
-                          className="flex items-start text-white p-2 text-left"
-                          key={key}
-                        >
-                          <div className="flex-shrink-0">
-                            <svg
-                              className="h-6 w-6 text-white"
-                              stroke="currentColor"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M5 13l4 4L19 7"
-                              ></path>
-                            </svg>
-                          </div>
-                          <p className="ml-3 text-base font-medium ">{des}</p>
-                        </li>
-                      ))}
-                    </ul>
-
-                    <button
-                      className="w-2/3 text-center rounded-lg bg-white px-4 py-2 text-base font-semibold font-display  hover:text-teal-500 focus:outline-none focus:shadow-outline"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        navigate(`/checkout/${deal.id}`);
-                      }}
-                    >
-                      BUY
-                    </button>
-                  </div>
-                </label>
-              </div>
-            ))}
-        </div>
+    </div>
         {/* Footer */}
         <Footer>
           <Copyright />
