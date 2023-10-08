@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Navbar from  "./Navbar";
 import { useToasts } from "react-toast-notifications";
 import { Auth } from "aws-amplify";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
@@ -20,7 +21,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default () => {
   const [verificationInput, setVerificationInput] = useState('');
-   const classes = useStyles();
+  const navigate = useNavigate()
+  const classes = useStyles();
   const {addToast} = useToasts();
   const handleChange = (event) => {
     setVerificationInput(event.target.value);
@@ -32,7 +34,8 @@ export default () => {
         try {
       const user = await Auth.currentAuthenticatedUser();
       const response = await axios.post(
-        "https://api.myflowerarchitect.com/arranger/account/profile/delete",
+        "https://api.myflowerarchitect.com/arranger/account/delete",
+        {},
         {
           headers: {
             Authorization: `Bearer ${user.signInUserSession.idToken.jwtToken}`,
@@ -40,7 +43,7 @@ export default () => {
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "*",
-          },
+          }
         }
       );
         console.log(e);
@@ -50,6 +53,10 @@ export default () => {
         PlacementType: "top-right",
         autoDismissTimeout: 6000
       });
+      Auth.signOut();
+      localStorage.removeItem("identity_id");
+      localStorage.removeItem("JWT_TOKEN_KEY");
+      navigate("/signin");
     } catch (e) {
       console.log(e);
         addToast("There is an error while deleting the account", {
@@ -67,7 +74,7 @@ export default () => {
         autoDismissTimeout: 6000
       });
     }
-  
+
   };
 
 
@@ -80,7 +87,7 @@ export default () => {
             <h1 className="text-3xl center my-4 text-center"> Delete Account</h1>
            <div className="p-4">
         <div>
-        
+
           <input
             className="border p-2 mt-2 block w-full"
             type="text"
